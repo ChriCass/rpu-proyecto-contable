@@ -20,7 +20,7 @@
     <main class="container bg-white shadow rounded mt-5 ">
         <div class="row align-items-stretch">
             <div class="col  p-0 d-flex d-none mt-5 d-lg-block col-lg-5 col-xl-6 rounded">
-                <img src="{{ asset('img/constructor.png') }}" class="bg rounded" alt="">
+                <img src="{{ asset('img/rpu.jpg') }}" class="bg rounded" alt="">
             </div>
             <div class="col  p-5 rounded-end">
                 <div class="text-end">

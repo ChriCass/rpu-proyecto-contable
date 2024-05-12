@@ -50,21 +50,31 @@
         <!-- Sidebar para dispositivos de escritorio -->
           <!-- Sidebar para dispositivos de escritorio -->
     <aside class="bg-white d-none d-lg-block shadow-lg " style="padding: 2rem;">
-        <div class="text-center mb-4">
-            <img src="{{ asset('img/rpu.jpg') }}" alt="" width="100" class="img-fluid ">
+        <div class="text-center mb-4"> 
+            <a  href="{{ route('empresa.show', ['id' => $empresa->id]) }}"><img src="{{ asset('img/rpu.jpg') }}" alt="" width="100" class="img-fluid "></a>
+            
         </div>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="map-google.html">
-                    <i class="bi bi-cart4 flex-shrink-0"></i> <!-- Cambiado para Compras-Ventas -->
+                <a class="nav-link d-flex align-items-center" href="{{ route('compraVenta', ['id' => $empresa->id]) }}">
+                    <i class="bi bi-cart4 flex-shrink-0"></i> <!-- Icono para Compras-Ventas -->
                     <span class="ms-2">Compras-Ventas</span>
                 </a>
+            </li>
+            
+            <li class="nav-item">
+                <!-- Usamos un botón para desplegar las opciones -->
+                <a class="nav-link d-flex align-items-center" href="#"  >
+                    <i class="bi bi-pencil-square flex-shrink-0"></i>
+                    <span class="ms-2">Registrar Asiento</span>
+                </a>
+ 
             </li>
             <li class="nav-item">
                 <!-- Usamos un botón para desplegar las opciones -->
                 <a class="nav-link d-flex align-items-center" href="#" data-bs-toggle="collapse" data-bs-target="#submenuRegistroAsiento">
-                    <i class="bi bi-pencil-square flex-shrink-0"></i>
-                    <span class="ms-2">Registrar Asiento</span>
+                    <i class="bi bi-arrow-down-square-fill"></i>
+                    <span class="ms-2">Reportes Contable</span>
                 </a>
                 <!-- Submenú desplegable -->
                 <div class="collapse" id="submenuRegistroAsiento">
@@ -79,6 +89,38 @@
                             <a class="nav-link d-flex align-items-center" href="map-google.html">
                                 <i class="bi bi-receipt-cutoff flex-shrink-0"></i>
                                 <span class="ms-2">R. Compras</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="map-google.html">
+                                <i class="bi bi-journal-text flex-shrink-0"></i> <!-- Cambiado para Diario -->
+                                <span class="ms-2">Diario</span>
+                            </a>
+                        </li>
+             
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="map-google.html">
+                                <i class="bi bi-clock-history flex-shrink-0"></i> <!-- Cambiado para Pendientes -->
+                                <span class="ms-2">Pendientes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="map-google.html">
+                                <i class="bi bi-people flex-shrink-0"></i> <!-- Cambiado para Conrrentistas -->
+                                <span class="ms-2">Conrrentistas</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="map-google.html">
+                                <i class="bi bi-book-half flex-shrink-0"></i> <!-- Cambiado para Mayor -->
+                                <span class="ms-2">Mayor</span>
+                            </a>
+                        </li>
+             
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="map-google.html">
+                                <i class="bi bi-book flex-shrink-0"></i> <!-- Cambiado para Plan contable -->
+                                <span class="ms-2">Plan contable</span>
                             </a>
                         </li>
                     </ul>
@@ -96,38 +138,7 @@
                     <span class="ms-2">Hoja de trabajo</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="map-google.html">
-                    <i class="bi bi-journal-text flex-shrink-0"></i> <!-- Cambiado para Diario -->
-                    <span class="ms-2">Diario</span>
-                </a>
-            </li>
- 
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="map-google.html">
-                    <i class="bi bi-clock-history flex-shrink-0"></i> <!-- Cambiado para Pendientes -->
-                    <span class="ms-2">Pendientes</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="map-google.html">
-                    <i class="bi bi-people flex-shrink-0"></i> <!-- Cambiado para Conrrentistas -->
-                    <span class="ms-2">Conrrentistas</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="map-google.html">
-                    <i class="bi bi-book-half flex-shrink-0"></i> <!-- Cambiado para Mayor -->
-                    <span class="ms-2">Mayor</span>
-                </a>
-            </li>
- 
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="map-google.html">
-                    <i class="bi bi-book flex-shrink-0"></i> <!-- Cambiado para Plan contable -->
-                    <span class="ms-2">Plan contable</span>
-                </a>
-            </li>
+
             <li class="nav-item text-center mt-5">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
@@ -149,7 +160,13 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <!-- Espacio donde estaba la imagen -->
-                    <div class="ms-auto my-3 text-light">{{ auth()->user()->name }}</div>
+                    <div class="ms-auto my-3">
+                        <!-- Botón para cambiar de empresa -->
+                        <a class="btn btn-dark" href="{{ route('home') }}">
+                         Cambiar de empresa
+                        </a>
+                      </div>
+                      
                 </div>
             </nav>
         </header>
@@ -162,11 +179,12 @@
                 <div class="offcanvas-body">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link d-flex align-items-center" href="map-google.html">
-                                <i class="bi bi-cart4 flex-shrink-0"></i> <!-- Cambiado para Compras-Ventas -->
+                            <a class="nav-link d-flex align-items-center" href="{{ route('compraVenta', ['id' => $empresa->id]) }}">
+                                <i class="bi bi-cart4 flex-shrink-0"></i> <!-- Icono para Compras-Ventas -->
                                 <span class="ms-2">Compras-Ventas</span>
                             </a>
                         </li>
+                        
                         <li class="nav-item">
                             <!-- Usamos un botón para desplegar las opciones -->
                             <a class="nav-link d-flex align-items-center" href="#" data-bs-toggle="collapse" data-bs-target="#submenuRegistroAsiento">

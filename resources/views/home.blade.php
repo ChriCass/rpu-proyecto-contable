@@ -25,11 +25,16 @@
                 <h3 class="box-title">Buenas noches, invitado</h3>
             @endif
         </div>
-        <div  class="white-box rounded analytics-info d-flex  " >
-            <div> <img src="{{ asset('img/sunat-logo.svg') }}" width="50" alt=""></div>
-            <div class="mx-3"  ><p class="h4 fw-bold m-0">Documentos por firmar</p>
-                <p class="fw-light">22 depndientes por firmar</p>
+        <div  class="white-box rounded analytics-info d-flex  flex-column" >
+            <div class="mx-3"  ><p class="h4 fw-bold m-0 text-center">Mayor informacion?</p>
             </div>
+            <div class="d-flex justify-content-center">
+                <a href="https://www.sunat.gob.pe/sol.html" target="_blank">
+                    <img src="{{ asset('img/sunat-logo.svg') }}" class="img-fluid" width="150" alt="Logo de SUNAT">
+                </a>
+            </div>
+            
+
         </div>
  
     </div>

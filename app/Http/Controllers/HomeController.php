@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Empresa;
+use App\Models\Libro;
 class HomeController extends Controller
 {
     /**
@@ -32,5 +33,12 @@ class HomeController extends Controller
     {
         $empresa = Empresa::findOrFail($id);
         return view('home', compact('empresa'));
+    }
+
+    public function compraVenta($id)
+    {
+        $empresa = Empresa::findOrFail($id);
+        $libro = Libro::all();
+        return view('empresa.compra_venta', compact('empresa', 'libro'));
     }
 }

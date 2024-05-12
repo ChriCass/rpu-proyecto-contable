@@ -9,16 +9,15 @@ class LibroTributario extends Model
 {
     use HasFactory;
 
-    protected $table = 's_librostributarios_agrcts'; // Specify the table name
-    public $timestamps = false; // Assume the table does not manage timestamps
+    protected $table = 's_librostributarios_agrcts';  
+    public $timestamps = false;  
 
-    protected $primaryKey = 'N'; // Set the primary key
-    protected $keyType = 'int'; // Define the primary key type
-    public $incrementing = false; // Primary key does not auto-increment
-
+    protected $primaryKey = 'N'; 
+    protected $keyType = 'int';  
+    public $incrementing = false;  
     protected $fillable = [
-        'N', 'Descripcion' // Allow mass assignment on these fields
+        'N', 'Descripcion'  
     ];
 
-    // No need for $guarded if $fillable is set unless extra security is needed
+  
 }
