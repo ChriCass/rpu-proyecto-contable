@@ -49,7 +49,7 @@
     <div class="d-flex flex-column flex-lg-row" id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full" data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
         <!-- Sidebar para dispositivos de escritorio -->
           <!-- Sidebar para dispositivos de escritorio -->
-    <aside class="bg-white d-none d-lg-block shadow-lg " style="padding: 2rem;">
+    <aside class="bg-white d-none d-lg-block shadow-lg fixed" style="padding: 2rem;">
         <div class="text-center mb-4"> 
             <a  href="{{ route('empresa.show', ['id' => $empresa->id]) }}"><img src="{{ asset('img/rpu.jpg') }}" alt="" width="100" class="img-fluid "></a>
             
