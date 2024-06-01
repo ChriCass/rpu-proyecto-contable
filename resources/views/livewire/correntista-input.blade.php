@@ -9,7 +9,7 @@
         </div>
 
         <div class="form-group  mx-lg-3">
-            <input type="text" class="form-control" wire:model="correntista" id="correntista" name="correntista"
+            <input type=" text" class="form-control" wire:model="correntista" id="correntista" name="correntista"
                 placeholder="Insertar correntista" required>
         </div>
         <div>
