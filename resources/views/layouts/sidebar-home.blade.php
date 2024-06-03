@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="stylesheet" href="{{ asset('css/style.min.css') }}">
-  
+
     <!-- Plugins Core Css -->
     <link href="{{ asset('css/common.min.css') }}" rel="stylesheet">
     <!-- Custom Css -->
@@ -15,9 +14,7 @@
     <!-- You can choose a theme from css/styles instead of get all themes -->
     <link href="{{ asset('css/styles/theme-green.css') }}" rel="stylesheet" />
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+
 
     <style>
         * {
@@ -33,7 +30,7 @@
     <div class="page-loader-wrapper">
         <div class="loader">
             <div class="m-t-30">
-                <img class="loading-img-spin" src="assets/images/loading.png" alt="admin">
+                <img class="loading-img-spin rounded" src="{{ asset('images/rpu.jpg') }}" alt="admin">
             </div>
             <p>un momento por favor...</p>
         </div>
@@ -51,7 +48,7 @@
                 <a href="#" onClick="return false;" class="bars"></a>
                 <a class="navbar-brand" href="{{ route('home') }}">
                     <img src="assets/images/logo.png" alt="" />
-                    <span class="logo-name">GestionHR</span>
+                    <span class="logo-name">{{ $empresa->Nombre }}</span>
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -242,198 +239,82 @@
                             </div>
                         </div>
                         <div class="profile-usertitle">
-                            <div class="sidebar-userpic-name">{{ Auth::user()->nombre_usuario }}</div>
+                            <div class="sidebar-userpic-name">{{ Auth::user()->name }}</div>
                             <div class="profile-usertitle-job">{{ Auth::user()->email }}</div>
                         </div>
                     </li>
                     <li class="header">-- Principal</li>
-                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
-                        <a href="{{ route('home') }}">
+                    <li class="{{ Route::currentRouteName() == 'empresa.show' ? 'active' : '' }}">
+                        <a href="{{ route('empresa.show', ['id' => $empresa->id]) }}">
                             <i data-feather="monitor"></i>
                             <span>Panel principal</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="users"></i>
-                            <span>Colaboradores</span>
+                    <li class="{{ Route::currentRouteName() == 'compraVenta' ? 'active' : '' }}">
+                        <a href="{{ route('compraVenta', ['id' => $empresa->id]) }}">
+                            <i data-feather="monitor"></i>
+                            <span>Compra-Venta</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li >
-                                <a href=""><span>Todos los Colaboradores</span></a>
-                            </li>
-                            <li >
-                                <a href=""><span>Añadir Colaborador</span></a>
-                            </li>
-                        </ul>
                     </li>
+
                     <li>
                         <a href="#" onClick="return false;" class="menu-toggle">
                             <i data-feather="briefcase"></i>
-                            <span>Contratos</span>
+                            <span>Registrar Asiento</span>
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="pages/projects/all-projects.html">Todos los contratos</a>
+                                <a href="pages/projects/all-projects.html">R. Ventas</a>
                             </li>
                             <li>
-                                <a href="pages/projects/add-project.html">Añadir Contrato</a>
-                            </li>
-                            <li>
-                                <a href="pages/projects/edit-project.html">Editar Contrato</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="book-open"></i>
-                            <span>Horarios</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/attendance/today-attend.html">Todos los Horarios </a>
-                            <li>
-                                <a href="pages/attendance/emp-attend.html">Añadir horario</a>
-                            </li>
-                            <li>
-                                <a href="pages/attendance/emp-attend.html">Editar horario</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="user"></i>
-                            <span>Usuarios</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/clients/all-clients.html">Todos los usuarios</a>
-                            </li>
-                            <li>
-                                <a href="pages/clients/add-client.html">Añadir usuario</a>
-                            </li>
-                            <li>
-                                <a href="pages/clients/edit-client.html">Editar usuario</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="clipboard"></i>
-                            <span>Areas</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/leave/all-leave.html">Todas las Areas</a>
-                            </li>
-                            <li>
-                                <a href="pages/leave/leave-balance.html">Añadir Area</a>
-                            </li>
-                            <li>
-                                <a href="pages/leave/add-leave.html">Editar Area</a>
+                                <a href="pages/projects/add-project.html">R. Compras</a>
                             </li>
 
                         </ul>
                     </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="headphones"></i>
-                            <span>Cargos</span>
+                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                        <a href="{{ route('home') }}">
+                            <i data-feather="monitor"></i>
+                            <span>Caja-Diario</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/holiday/all-holidays.html">Todos los cargos</a>
-                            </li>
-                            <li>
-                                <a href="pages/holiday/add-holiday.html">Añadir cargo</a>
-                            </li>
-                            <li>
-                                <a href="pages/holiday/edit-holiday.html">Editar Cargo</a>
-                            </li>
-                        </ul>
                     </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="book"></i>
-                            <span>Accounts</span>
+                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                        <a href="{{ route('home') }}">
+                            <i data-feather="monitor"></i>
+                            <span>Hoja de trabajo</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/accounts/income.html">Income</a>
-                            </li>
-                            <li>
-                                <a href="pages/accounts/expense.html">Expenses</a>
-                            </li>
-                            <li>
-                                <a href="pages/accounts/invoice.html">Invoices</a>
-                            </li>
-                        </ul>
                     </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="trello"></i>
-                            <span>Departments</span>
+                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                        <a href="{{ route('home') }}">
+                            <i data-feather="monitor"></i>
+                            <span>Diario</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/departments/all-departments.html">All Departments</a>
-                            </li>
-                            <li>
-                                <a href="pages/departments/add-department.html">Add Department</a>
-                            </li>
-                            <li>
-                                <a href="pages/departments/edit-department.html">Edit Departments</a>
-                            </li>
-                        </ul>
                     </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="dollar-sign"></i>
-                            <span>Payroll</span>
+                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                        <a href="{{ route('home') }}">
+                            <i data-feather="monitor"></i>
+                            <span>Pendientes</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/payroll/payslip.html">Payslip</a>
-                            </li>
-                            <li>
-                                <a href="pages/payroll/employee-salary.html">Employee Salary</a>
-                            </li>
-                        </ul>
                     </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="command"></i>
-                            <span>Job</span>
+                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                        <a href="{{ route('home') }}">
+                            <i data-feather="monitor"></i>
+                            <span>Conrrentistas</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/job/add-job.html">Add Job</a>
-                            </li>
-                            <li>
-                                <a href="pages/job/requirement-list.html">Requirements</a>
-                            </li>
-                            <li>
-                                <a href="pages/job/applicant-list.html">Applicant List</a>
-                            </li>
-                        </ul>
                     </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
-                            <i data-feather="package"></i>
-                            <span>Consultancy</span>
+                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                        <a href="{{ route('home') }}">
+                            <i data-feather="monitor"></i>
+                            <span>Mayor</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="pages/consultancy/all-consultancy.html">All Consultancy</a>
-                            </li>
-                            <li>
-                                <a href="pages/consultancy/add-consultancy.html">Add Consultancy</a>
-                            </li>
-                            <li>
-                                <a href="pages/consultancy/edit-consultancy.html">Edit Consultancy</a>
-                            </li>
-                        </ul>
                     </li>
+                    <li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                        <a href="{{ route('home') }}">
+                            <i data-feather="monitor"></i>
+                            <span>Plan contable</span>
+                        </a>
+                    </li>
+
 
                 </ul>
             </div>
@@ -632,7 +513,8 @@
     <script src="{{ asset('js/bundles/apexcharts.min.js') }}"></script>
     <script src="{{ asset('js/pages/index.js') }}"></script>
     <script src="{{ asset('js/pages/todo/todo.js') }}"></script>
- 
+
     @livewireScripts
 </body>
+
 </html>

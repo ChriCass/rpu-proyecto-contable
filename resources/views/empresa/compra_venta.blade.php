@@ -2,569 +2,572 @@
 @extends('layouts.sidebar-home')
 
 @section('content')
-    <a class="btn btn-secondary mb-3" href="{{ route('empresa.show', ['id' => $empresa->id]) }}" role="button">atras</a>
-    <div class="row justify-content-center">
-        <div class="col-lg-12 col-md-12">
-           
-                <div class="d-flex justify-content-between mb-3">
-                    <div class="d-flex align-items-center ">
-                        <span class="me-2">Mostrar</span>
-                        <select class="form-select" aria-label="Seleccionar número" id="numeroSelect">
-                           
-                            <option selected value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                        <span class="ms-2">entradas</span>
+ 
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <a class="btn btn-secondary mb-3" href="{{ route('empresa.show', ['id' => $empresa->id]) }}" role="button">atras</a>
+            <div class="row justify-content-center">
+                <div class="col-lg-12 col-md-12">
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="d-flex align-items-center ">
+                            <span class="me-2">Mostrar</span>
+                            <select class="form-select" aria-label="Seleccionar número" id="numeroSelect">
+                                <option selected value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <span class="ms-2">entradas</span>
+                        </div>
+                        <div style="width: 50%">
+                            <input type="email" class="form-control w-100" id="exampleFormControlInput1" placeholder="ingrese una palabra para filtrar">
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-primary text-light" data-bs-toggle="modal" data-bs-target="#formModal">
+                                Abrir Formulario
+                            </button>
+                        </div>
                     </div>
-                    <div  style="width: 50%">
-
-                        <input type="email" class="form-control w-100" id="exampleFormControlInput1"
-                            placeholder="ingrese una palabra para filtrar">
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-primary text-light" data-bs-toggle="modal"
-                            data-bs-target="#formModal">
-                            Abrir Formulario
-                        </button>
-                    </div>
-
-
-                </div>
-
-            
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="white-box">
-                            <div class="d-md-flex mb-3">
-                                <h3 class="box-title mb-0">Tabla de referencia</h3>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table no-wrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0 bg-primary text-light">#</th>
-                                            <th class="border-top-0 bg-primary text-light">Libro</th>
-                                            <th class="border-top-0 bg-primary text-light">Fecha del Documento</th>
-                                            <th class="border-top-0 bg-primary text-light">Fecha de Vencimiento</th>
-                                            <th class="border-top-0 bg-primary text-light">Correntista</th>
-                                            <th class="border-top-0 bg-primary text-light">Razon Social</th>
-                                            <th class="border-top-0 bg-primary text-light">Tipo de Identificación</th>
-                                            <th class="border-top-0 bg-primary text-light">Serie</th>
-                                            <th class="border-top-0 bg-primary text-light">Número</th>
-                                            <th class="border-top-0 bg-primary text-light">Código de Moneda</th>
-                                            <th class="border-top-0 bg-primary text-light">Tipo de Cambio</th>
-                                            <th class="border-top-0 bg-primary text-light">Tipo de Operación IGV</th>
-                                            <th class="border-top-0 bg-primary text-light">Base Imponible</th>
-                                            <th class="border-top-0 bg-primary text-light">IGV</th>
-                                            <th class="border-top-0 bg-primary text-light">No Gravadas</th>
-                                            <th class="border-top-0 bg-primary text-light">ISC</th>
-                                            <th class="border-top-0 bg-primary text-light">Importe Bol. Pla.</th>
-                                            <th class="border-top-0 bg-primary text-light">Otro Tributo</th>
-                                            <th class="border-top-0 bg-primary text-light">Precio</th>
-                                            <th class="border-top-0 bg-primary text-light">Glosa</th>
-                                            <th class="border-top-0 bg-primary text-light">Cuenta 1</th>
-                                            <th class="border-top-0 bg-primary text-light">Cuenta 2</th>
-                                            <th class="border-top-0 bg-primary text-light">Cuenta 3</th>
-                                            <th class="border-top-0 bg-primary text-light">Cuenta Precio</th>
-                                            <th class="border-top-0 bg-primary text-light">Moneda 1</th>
-                                            <th class="border-top-0 bg-primary text-light">Moneda 2</th>
-                                            <th class="border-top-0 bg-primary text-light">Moneda 3</th>
-                                            <th class="border-top-0 bg-primary text-light">Centro de Costo 1</th>
-                                            <th class="border-top-0 bg-primary text-light">Centro de Costo 2</th>
-                                            <th class="border-top-0 bg-primary text-light">Centro de Costo 3</th>
-                                            <th class="border-top-0 bg-primary text-light">Cuenta Otro Tributo</th>
-                                            <th class="border-top-0 bg-primary text-light">Fecha de Modificación</th>
-                                            <th class="border-top-0 bg-primary text-light">Tipo de Documento Modificado</th>
-                                            <th class="border-top-0 bg-primary text-light">Serie de Documento Modificado</th>
-                                            <th class="border-top-0 bg-primary text-light">Número de Documento Modificado</th>
-                                            <th class="border-top-0 bg-primary text-light">Fecha de Emisión de Detracción</th>
-                                            <th class="border-top-0 bg-primary text-light">Número de Constancia de Detracción</th>
-                                            <th class="border-top-0 bg-primary text-light">Tiene Detracción</th>
-                                            <th class="border-top-0 bg-primary text-light">Cuenta de Detracción</th>
-                                            <th class="border-top-0 bg-primary text-light">Monto de Detracción</th>
-                                            <th class="border-top-0 bg-primary text-light">Referencia Interna 1</th>
-                                            <th class="border-top-0 bg-primary text-light">Referencia Interna 2</th>
-                                            <th class="border-top-0 bg-primary text-light">Referencia Interna 3</th>
-                                            <th class="border-top-0 bg-primary text-light">Estado del Documento</th>
-                                            <th class="border-top-0 bg-primary text-light">Estado</th>
-                                            <th class="border-top-0 bg-primary text-light">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Libro 1</td>
-                                            <td>2024-05-01</td>
-                                            <td>2024-06-01</td>
-                                            <td>123456789</td>
-                                            <td>juanito</td>
-                                            <td>ID 1</td>
-                                            <td>Serie 1</td>
-                                            <td>123456</td>
-                                            <td>USD</td>
-                                            <td>1.2</td>
-                                            <td>Operacion IGV 1</td>
-                                            <td>1000</td>
-                                            <td>180</td>
-                                            <td>100</td>
-                                            <td>50</td>
-                                            <td>20</td>
-                                            <td>10</td>
-                                            <td>1500</td>
-                                            <td>Glosa 1</td>
-                                            <td>Cuenta 1</td>
-                                            <td>Cuenta 2</td>
-                                            <td>Cuenta 3</td>
-                                            <td>Cuenta Precio 1</td>
-                                            <td>Moneda 1</td>
-                                            <td>Moneda 2</td>
-                                            <td>Moneda 3</td>
-                                            <td>Centro Costo 1</td>
-                                            <td>Centro Costo 2</td>
-                                            <td>Centro Costo 3</td>
-                                            <td>Cuenta Otro Tributo 1</td>
-                                            <td>2024-05-10</td>
-                                            <td>Tipo Documento Modificado 1</td>
-                                            <td>Serie Documento Modificado 1</td>
-                                            <td>789456</td>
-                                            <td>2024-05-15</td>
-                                            <td>Constancia 1</td>
-                                            <td>Sí</td>
-                                            <td>Cuenta Detracción 1</td>
-                                            <td>200</td>
-                                            <td>Ref Interna 1</td>
-                                            <td>Ref Interna 2</td>
-                                            <td>Ref Interna 3</td>
-                                            <td>Activo</td>
-                                            <td>Activo</td>
-                                            <td class="d-flex">
-                                                <a href="#" class="btn btn-warning text-light">Edit</a>
-                                                <button class="btn btn-danger text-light mx-3" onclick="confirm('Are you sure?')">Delete</button>
-                                            </td>
-                                        </tr>
-                                        <!-- Añadir más filas según sea necesario -->
-                                    </tbody>
-                                </table>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <div class="card">
+                                    <div class="header">
+                                        <h2><strong>Tabla de referencia</strong></h2>
+                                    </div>
+                                    <div class="body">
+                                        <div class="table-responsive">
+                                            <table id="basicTable" class="table table-hover table-checkable order-column contact_list">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="center">#</th>
+                                                        <th class="center">Libro</th>
+                                                        <th class="center">Fecha del Documento</th>
+                                                        <th class="center">Fecha de Vencimiento</th>
+                                                        <th class="center">Correntista</th>
+                                                        <th class="center">Razon Social</th>
+                                                        <th class="center">Tipo de Identificación</th>
+                                                        <th class="center"">Serie</th>
+                                                        <th class="center">Número</th>
+                                                        <th  class="center">Código de Moneda</th>
+                                                        <th class="center">Tipo de Cambio</th>
+                                                        <th  class="center">Tipo de Operación IGV</th>
+                                                        <th  class="center">Base Imponible</th>
+                                                        <th  class="center">IGV</th>
+                                                        <th  class="center">No Gravadas</th>
+                                                        <th  class="center">ISC</th>
+                                                        <th  class="center">Importe Bol. Pla.</th>
+                                                        <th  class="center">Otro Tributo</th>
+                                                        <th  class="center">Precio</th>
+                                                        <th  class="center">Glosa</th>
+                                                        <th  class="center">Cuenta 1</th>
+                                                        <th  class="center">Cuenta 2</th>
+                                                        <th  class="center">Cuenta 3</th>
+                                                        <th  class="center">Cuenta Precio</th>
+                                                        <th  class="center">Moneda 1</th>
+                                                        <th  class="center">Moneda 2</th>
+                                                        <th  class="center">Moneda 3</th>
+                                                        <th  class="center">Centro de Costo 1</th>
+                                                        <th  class="center">Centro de Costo 2</th>
+                                                        <th  class="center">Centro de Costo 3</th>
+                                                        <th  class="center">Cuenta Otro Tributo</th>
+                                                        <th  class="center">Fecha de Modificación</th>
+                                                        <th  class="center">Tipo de Documento Modificado</th>
+                                                        <th  class="center">Serie de Documento Modificado</th>
+                                                        <th  class="center">Número de Documento Modificado</th>
+                                                        <th  class="center">Fecha de Emisión de Detracción</th>
+                                                        <th  class="center">Número de Constancia de Detracción</th>
+                                                        <th  class="center">Tiene Detracción</th>
+                                                        <th  class="center">Cuenta de Detracción</th>
+                                                        <th  class="center">Monto de Detracción</th>
+                                                        <th  class="center">Referencia Interna 1</th>
+                                                        <th  class="center">Referencia Interna 2</th>
+                                                        <th  class="center">Referencia Interna 3</th>
+                                                        <th  class="center">Estado del Documento</th>
+                                                        <th  class="center">Estado</th>
+                                                        <th  class="center">Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>Libro 1</td>
+                                                        <td>2024-05-01</td>
+                                                        <td>2024-06-01</td>
+                                                        <td>123456789</td>
+                                                        <td>juanito</td>
+                                                        <td>ID 1</td>
+                                                        <td>Serie 1</td>
+                                                        <td>123456</td>
+                                                        <td>USD</td>
+                                                        <td>1.2</td>
+                                                        <td>Operacion IGV 1</td>
+                                                        <td>1000</td>
+                                                        <td>180</td>
+                                                        <td>100</td>
+                                                        <td>50</td>
+                                                        <td>20</td>
+                                                        <td>10</td>
+                                                        <td>1500</td>
+                                                        <td>Glosa 1</td>
+                                                        <td>Cuenta 1</td>
+                                                        <td>Cuenta 2</td>
+                                                        <td>Cuenta 3</td>
+                                                        <td>Cuenta Precio 1</td>
+                                                        <td>Moneda 1</td>
+                                                        <td>Moneda 2</td>
+                                                        <td>Moneda 3</td>
+                                                        <td>Centro Costo 1</td>
+                                                        <td>Centro Costo 2</td>
+                                                        <td>Centro Costo 3</td>
+                                                        <td>Cuenta Otro Tributo 1</td>
+                                                        <td>2024-05-10</td>
+                                                        <td>Tipo Documento Modificado 1</td>
+                                                        <td>Serie Documento Modificado 1</td>
+                                                        <td>789456</td>
+                                                        <td>2024-05-15</td>
+                                                        <td>Constancia 1</td>
+                                                        <td>Sí</td>
+                                                        <td>Cuenta Detracción 1</td>
+                                                        <td>200</td>
+                                                        <td>Ref Interna 1</td>
+                                                        <td>Ref Interna 2</td>
+                                                        <td>Ref Interna 3</td>
+                                                        <td>Activo</td>
+                                                        <td>Activo</td>
+                                                        <td class="center">
+                                                            <a class="btn btn-tbl-edit">
+                                                                <i class="material-icons">create</i>
+                                                            </a>
+                                                            <form method="POST"   style="display:inline;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-tbl-delete">
+                                                                    <i class="material-icons">delete_forever</i>
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Añadir más filas según sea necesario -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-
             </div>
+        </div>
+    </div>
+        <!-- Modal -->
+        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModalLabel">Formulario de Compra-Ventas
+                            {{ $empresa->Nombre }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" method="POST" enctype="multipart/form-data">
+                            @csrf
     
-        </div>
-            <!-- Modal -->
-            <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="formModalLabel">Formulario de Compra-Ventas
-                                {{ $empresa->Nombre }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="#" method="POST" enctype="multipart/form-data">
-                                @csrf
-
-                                <!-- Alerta de Errores de Validación -->
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
+                            <!-- Alerta de Errores de Validación -->
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+    
+                            <div class="d-flex  flex-column mb-5">
+    
+    
+                                <livewire:correntista-input />
+                            </div>
+    
+                            <!-- Primera fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="libro">Libro</label>
+                                        <select class="form-control" id="libro" name="libro" required>
+                                            @foreach ($libro as $libroItem)
+                                                <option value="{{ $libroItem->N }}">{{ $libroItem->DESCRIPCION }}
+                                                </option>
                                             @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-
-                                <div class="d-flex  flex-column mb-5">
-
-
-                                    <livewire:correntista-input />
-                                </div>
-
-                                <!-- Primera fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="libro">Libro</label>
-                                            <select class="form-control" id="libro" name="libro" required>
-                                                @foreach ($libro as $libroItem)
-                                                    <option value="{{ $libroItem->N }}">{{ $libroItem->DESCRIPCION }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="fecha_doc">Fecha del Documento</label>
-                                            <input type="date" class="form-control" id="fecha_doc" name="fecha_doc"
-                                                value="{{ old('fecha_doc') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="fecha_ven">Fecha de Vencimiento del Documento</label>
-                                            <input type="date" class="form-control" id="fecha_ven" name="fecha_ven"
-                                                value="{{ old('fecha_ven') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <livewire:input-respuesta-correntista />
+                                        </select>
                                     </div>
                                 </div>
-
-                                <!-- Segunda fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="id_type">Tipo de Identificación</label>
-                                            <input type="text" class="form-control" id="id_type" name="id_type"
-                                                placeholder="Tipo de Identificación" value="{{ old('id_type') }}"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="ser">Serie</label>
-                                            <input type="text" class="form-control" id="ser" name="ser"
-                                                placeholder="Serie" value="{{ old('ser') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="num">Número</label>
-                                            <input type="text" class="form-control" id="num" name="num"
-                                                placeholder="Número" value="{{ old('num') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cod_moneda">Código de Moneda</label>
-                                            <input type="text" class="form-control" id="cod_moneda" name="cod_moneda"
-                                                placeholder="Código de Moneda" value="{{ old('cod_moneda') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="fecha_doc">Fecha del Documento</label>
+                                        <input type="date" class="form-control" id="fecha_doc" name="fecha_doc"
+                                            value="{{ old('fecha_doc') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Tercera fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="tip_cam">Tipo de Cambio</label>
-                                            <input type="text" class="form-control" id="tip_cam" name="tip_cam"
-                                                placeholder="Tipo de Cambio" value="{{ old('tip_cam') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="top_igv">Tipo de Operación IGV</label>
-                                            <input type="text" class="form-control" id="top_igv" name="top_igv"
-                                                placeholder="Tipo de Operación IGV" value="{{ old('top_igv') }}"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="bas_imp">Base Imponible</label>
-                                            <input type="text" class="form-control" id="bas_imp" name="bas_imp"
-                                                placeholder="Base Imponible" value="{{ old('bas_imp') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="igv">IGV</label>
-                                            <input type="text" class="form-control" id="igv" name="igv"
-                                                placeholder="IGV" value="{{ old('igv') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="fecha_ven">Fecha de Vencimiento del Documento</label>
+                                        <input type="date" class="form-control" id="fecha_ven" name="fecha_ven"
+                                            value="{{ old('fecha_ven') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Cuarta fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="no_gravadas">No Gravadas</label>
-                                            <input type="text" class="form-control" id="no_gravadas"
-                                                name="no_gravadas" placeholder="No Gravadas"
-                                                value="{{ old('no_gravadas') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="isc">ISC</label>
-                                            <input type="text" class="form-control" id="isc" name="isc"
-                                                placeholder="ISC" value="{{ old('isc') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="imp_bol_pla">Importe Bol. Pla.</label>
-                                            <input type="text" class="form-control" id="imp_bol_pla"
-                                                name="imp_bol_pla" placeholder="Importe Bol. Pla."
-                                                value="{{ old('imp_bol_pla') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="otro_tributo">Otro Tributo</label>
-                                            <input type="text" class="form-control" id="otro_tributo"
-                                                name="otro_tributo" placeholder="Otro Tributo"
-                                                value="{{ old('otro_tributo') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <livewire:input-respuesta-correntista />
+                                </div>
+                            </div>
+    
+                            <!-- Segunda fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="id_type">Tipo de Identificación</label>
+                                        <input type="text" class="form-control" id="id_type" name="id_type"
+                                            placeholder="Tipo de Identificación" value="{{ old('id_type') }}"
+                                            required>
                                     </div>
                                 </div>
-
-                                <!-- Quinta fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="precio">Precio</label>
-                                            <input type="text" class="form-control" id="precio" name="precio"
-                                                placeholder="Precio" value="{{ old('precio') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="glosa">Glosa</label>
-                                            <input type="text" class="form-control" id="glosa" name="glosa"
-                                                placeholder="Glosa" value="{{ old('glosa') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cnta1">Cuenta 1</label>
-                                            <input type="text" class="form-control" id="cnta1" name="cnta1"
-                                                placeholder="Cuenta 1" value="{{ old('cnta1') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cnta2">Cuenta 2</label>
-                                            <input type="text" class="form-control" id="cnta2" name="cnta2"
-                                                placeholder="Cuenta 2" value="{{ old('cnta2') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="ser">Serie</label>
+                                        <input type="text" class="form-control" id="ser" name="ser"
+                                            placeholder="Serie" value="{{ old('ser') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Sexta fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cnta3">Cuenta 3</label>
-                                            <input type="text" class="form-control" id="cnta3" name="cnta3"
-                                                placeholder="Cuenta 3" value="{{ old('cnta3') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cnta_precio">Cuenta Precio</label>
-                                            <input type="text" class="form-control" id="cnta_precio"
-                                                name="cnta_precio" placeholder="Cuenta Precio"
-                                                value="{{ old('cnta_precio') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="mon1">Moneda 1</label>
-                                            <input type="text" class="form-control" id="mon1" name="mon1"
-                                                placeholder="Moneda 1" value="{{ old('mon1') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="mon2">Moneda 2</label>
-                                            <input type="text" class="form-control" id="mon2" name="mon2"
-                                                placeholder="Moneda 2" value="{{ old('mon2') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="num">Número</label>
+                                        <input type="text" class="form-control" id="num" name="num"
+                                            placeholder="Número" value="{{ old('num') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Séptima fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="mon3">Moneda 3</label>
-                                            <input type="text" class="form-control" id="mon3" name="mon3"
-                                                placeholder="Moneda 3" value="{{ old('mon3') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cc1">Centro de Costo 1</label>
-                                            <input type="text" class="form-control" id="cc1" name="cc1"
-                                                placeholder="Centro de Costo 1" value="{{ old('cc1') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cc2">Centro de Costo 2</label>
-                                            <input type="text" class="form-control" id="cc2" name="cc2"
-                                                placeholder="Centro de Costo 2" value="{{ old('cc2') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cc3">Centro de Costo 3</label>
-                                            <input type="text" class="form-control" id="cc3" name="cc3"
-                                                placeholder="Centro de Costo 3" value="{{ old('cc3') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cod_moneda">Código de Moneda</label>
+                                        <input type="text" class="form-control" id="cod_moneda" name="cod_moneda"
+                                            placeholder="Código de Moneda" value="{{ old('cod_moneda') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Octava fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cta_otro_t">Cuenta Otro Tributo</label>
-                                            <input type="text" class="form-control" id="cta_otro_t" name="cta_otro_t"
-                                                placeholder="Cuenta Otro Tributo" value="{{ old('cta_otro_t') }}"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="fecha_emod">Fecha de Modificación</label>
-                                            <input type="date" class="form-control" id="fecha_emod" name="fecha_emod"
-                                                value="{{ old('fecha_emod') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="tdoc_emod">Tipo de Documento Modificado</label>
-                                            <input type="text" class="form-control" id="tdoc_emod" name="tdoc_emod"
-                                                placeholder="Tipo de Documento Modificado" value="{{ old('tdoc_emod') }}"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="ser_emod">Serie de Documento Modificado</label>
-                                            <input type="text" class="form-control" id="ser_emod" name="ser_emod"
-                                                placeholder="Serie de Documento Modificado" value="{{ old('ser_emod') }}"
-                                                required>
-                                        </div>
+                            </div>
+    
+                            <!-- Tercera fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="tip_cam">Tipo de Cambio</label>
+                                        <input type="text" class="form-control" id="tip_cam" name="tip_cam"
+                                            placeholder="Tipo de Cambio" value="{{ old('tip_cam') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Novena fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="num_emod">Número de Documento Modificado</label>
-                                            <input type="text" class="form-control" id="num_emod" name="num_emod"
-                                                placeholder="Número de Documento Modificado"
-                                                value="{{ old('num_emod') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="fec_emi_detr">Fecha de Emisión de Detracción</label>
-                                            <input type="date" class="form-control" id="fec_emi_detr"
-                                                name="fec_emi_detr" value="{{ old('fec_emi_detr') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="num_const_der">Número de Constancia de Detracción</label>
-                                            <input type="text" class="form-control" id="num_const_der"
-                                                name="num_const_der" placeholder="Número de Constancia de Detracción"
-                                                value="{{ old('num_const_der') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="tiene_detracc">Tiene Detracción</label>
-                                            <input type="text" class="form-control" id="tiene_detracc"
-                                                name="tiene_detracc" placeholder="Tiene Detracción"
-                                                value="{{ old('tiene_detracc') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="top_igv">Tipo de Operación IGV</label>
+                                        <input type="text" class="form-control" id="top_igv" name="top_igv"
+                                            placeholder="Tipo de Operación IGV" value="{{ old('top_igv') }}"
+                                            required>
                                     </div>
                                 </div>
-
-                                <!-- Décima fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="cta_detracc">Cuenta de Detracción</label>
-                                            <input type="text" class="form-control" id="cta_detracc"
-                                                name="cta_detracc" placeholder="Cuenta de Detracción"
-                                                value="{{ old('cta_detracc') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="mont_detracc">Monto de Detracción</label>
-                                            <input type="text" class="form-control" id="mont_detracc"
-                                                name="mont_detracc" placeholder="Monto de Detracción"
-                                                value="{{ old('mont_detracc') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="ref_int1">Referencia Interna 1</label>
-                                            <input type="text" class="form-control" id="ref_int1" name="ref_int1"
-                                                placeholder="Referencia Interna 1" value="{{ old('ref_int1') }}"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="ref_int2">Referencia Interna 2</label>
-                                            <input type="text" class="form-control" id="ref_int2" name="ref_int2"
-                                                placeholder="Referencia Interna 2" value="{{ old('ref_int2') }}"
-                                                required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="bas_imp">Base Imponible</label>
+                                        <input type="text" class="form-control" id="bas_imp" name="bas_imp"
+                                            placeholder="Base Imponible" value="{{ old('bas_imp') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Última fila de inputs -->
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="ref_int3">Referencia Interna 3</label>
-                                            <input type="text" class="form-control" id="ref_int3" name="ref_int3"
-                                                placeholder="Referencia Interna 3" value="{{ old('ref_int3') }}"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="estado_doc">Estado del Documento</label>
-                                            <input type="text" class="form-control" id="estado_doc" name="estado_doc"
-                                                placeholder="Estado del Documento" value="{{ old('estado_doc') }}"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group mb-3">
-                                            <label for="estado">Estado</label>
-                                            <input type="text" class="form-control" id="estado" name="estado"
-                                                placeholder="Estado" value="{{ old('estado') }}" required>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="igv">IGV</label>
+                                        <input type="text" class="form-control" id="igv" name="igv"
+                                            placeholder="IGV" value="{{ old('igv') }}" required>
                                     </div>
                                 </div>
-
-                                <!-- Botón de Envío -->
-                                <div class="row mt-3">
-                                    <div class="col-md-12 text-center">
-                                        <button type="submit" class="btn text-light btn-primary">Agregar a
-                                            lista</button>
+                            </div>
+    
+                            <!-- Cuarta fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="no_gravadas">No Gravadas</label>
+                                        <input type="text" class="form-control" id="no_gravadas"
+                                            name="no_gravadas" placeholder="No Gravadas"
+                                            value="{{ old('no_gravadas') }}" required>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="isc">ISC</label>
+                                        <input type="text" class="form-control" id="isc" name="isc"
+                                            placeholder="ISC" value="{{ old('isc') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="imp_bol_pla">Importe Bol. Pla.</label>
+                                        <input type="text" class="form-control" id="imp_bol_pla"
+                                            name="imp_bol_pla" placeholder="Importe Bol. Pla."
+                                            value="{{ old('imp_bol_pla') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="otro_tributo">Otro Tributo</label>
+                                        <input type="text" class="form-control" id="otro_tributo"
+                                            name="otro_tributo" placeholder="Otro Tributo"
+                                            value="{{ old('otro_tributo') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Quinta fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="precio">Precio</label>
+                                        <input type="text" class="form-control" id="precio" name="precio"
+                                            placeholder="Precio" value="{{ old('precio') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="glosa">Glosa</label>
+                                        <input type="text" class="form-control" id="glosa" name="glosa"
+                                            placeholder="Glosa" value="{{ old('glosa') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cnta1">Cuenta 1</label>
+                                        <input type="text" class="form-control" id="cnta1" name="cnta1"
+                                            placeholder="Cuenta 1" value="{{ old('cnta1') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cnta2">Cuenta 2</label>
+                                        <input type="text" class="form-control" id="cnta2" name="cnta2"
+                                            placeholder="Cuenta 2" value="{{ old('cnta2') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Sexta fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cnta3">Cuenta 3</label>
+                                        <input type="text" class="form-control" id="cnta3" name="cnta3"
+                                            placeholder="Cuenta 3" value="{{ old('cnta3') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cnta_precio">Cuenta Precio</label>
+                                        <input type="text" class="form-control" id="cnta_precio"
+                                            name="cnta_precio" placeholder="Cuenta Precio"
+                                            value="{{ old('cnta_precio') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="mon1">Moneda 1</label>
+                                        <input type="text" class="form-control" id="mon1" name="mon1"
+                                            placeholder="Moneda 1" value="{{ old('mon1') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="mon2">Moneda 2</label>
+                                        <input type="text" class="form-control" id="mon2" name="mon2"
+                                            placeholder="Moneda 2" value="{{ old('mon2') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Séptima fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="mon3">Moneda 3</label>
+                                        <input type="text" class="form-control" id="mon3" name="mon3"
+                                            placeholder="Moneda 3" value="{{ old('mon3') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cc1">Centro de Costo 1</label>
+                                        <input type="text" class="form-control" id="cc1" name="cc1"
+                                            placeholder="Centro de Costo 1" value="{{ old('cc1') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cc2">Centro de Costo 2</label>
+                                        <input type="text" class="form-control" id="cc2" name="cc2"
+                                            placeholder="Centro de Costo 2" value="{{ old('cc2') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cc3">Centro de Costo 3</label>
+                                        <input type="text" class="form-control" id="cc3" name="cc3"
+                                            placeholder="Centro de Costo 3" value="{{ old('cc3') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Octava fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cta_otro_t">Cuenta Otro Tributo</label>
+                                        <input type="text" class="form-control" id="cta_otro_t" name="cta_otro_t"
+                                            placeholder="Cuenta Otro Tributo" value="{{ old('cta_otro_t') }}"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="fecha_emod">Fecha de Modificación</label>
+                                        <input type="date" class="form-control" id="fecha_emod" name="fecha_emod"
+                                            value="{{ old('fecha_emod') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="tdoc_emod">Tipo de Documento Modificado</label>
+                                        <input type="text" class="form-control" id="tdoc_emod" name="tdoc_emod"
+                                            placeholder="Tipo de Documento Modificado" value="{{ old('tdoc_emod') }}"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="ser_emod">Serie de Documento Modificado</label>
+                                        <input type="text" class="form-control" id="ser_emod" name="ser_emod"
+                                            placeholder="Serie de Documento Modificado" value="{{ old('ser_emod') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Novena fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="num_emod">Número de Documento Modificado</label>
+                                        <input type="text" class="form-control" id="num_emod" name="num_emod"
+                                            placeholder="Número de Documento Modificado"
+                                            value="{{ old('num_emod') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="fec_emi_detr">Fecha de Emisión de Detracción</label>
+                                        <input type="date" class="form-control" id="fec_emi_detr"
+                                            name="fec_emi_detr" value="{{ old('fec_emi_detr') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="num_const_der">Número de Constancia de Detracción</label>
+                                        <input type="text" class="form-control" id="num_const_der"
+                                            name="num_const_der" placeholder="Número de Constancia de Detracción"
+                                            value="{{ old('num_const_der') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="tiene_detracc">Tiene Detracción</label>
+                                        <input type="text" class="form-control" id="tiene_detracc"
+                                            name="tiene_detracc" placeholder="Tiene Detracción"
+                                            value="{{ old('tiene_detracc') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Décima fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="cta_detracc">Cuenta de Detracción</label>
+                                        <input type="text" class="form-control" id="cta_detracc"
+                                            name="cta_detracc" placeholder="Cuenta de Detracción"
+                                            value="{{ old('cta_detracc') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="mont_detracc">Monto de Detracción</label>
+                                        <input type="text" class="form-control" id="mont_detracc"
+                                            name="mont_detracc" placeholder="Monto de Detracción"
+                                            value="{{ old('mont_detracc') }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="ref_int1">Referencia Interna 1</label>
+                                        <input type="text" class="form-control" id="ref_int1" name="ref_int1"
+                                            placeholder="Referencia Interna 1" value="{{ old('ref_int1') }}"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="ref_int2">Referencia Interna 2</label>
+                                        <input type="text" class="form-control" id="ref_int2" name="ref_int2"
+                                            placeholder="Referencia Interna 2" value="{{ old('ref_int2') }}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Última fila de inputs -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="ref_int3">Referencia Interna 3</label>
+                                        <input type="text" class="form-control" id="ref_int3" name="ref_int3"
+                                            placeholder="Referencia Interna 3" value="{{ old('ref_int3') }}"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="estado_doc">Estado del Documento</label>
+                                        <input type="text" class="form-control" id="estado_doc" name="estado_doc"
+                                            placeholder="Estado del Documento" value="{{ old('estado_doc') }}"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group mb-3">
+                                        <label for="estado">Estado</label>
+                                        <input type="text" class="form-control" id="estado" name="estado"
+                                            placeholder="Estado" value="{{ old('estado') }}" required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <!-- Botón de Envío -->
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-center">
+                                    <button type="submit" class="btn text-light btn-primary">Agregar a
+                                        lista</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
+</section>
 
 @endsection
