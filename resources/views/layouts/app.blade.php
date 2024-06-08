@@ -18,7 +18,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md  navbar-light bg-primary shadow-sm">
+        <nav class="navbar navbar-expand-md p-0  navbar-light bg-primary shadow-sm">
             <div class="container">
                 <a id="greeting" class="navbar-brand fw-bolder text-light" href="{{ url('/') }}">
                      
@@ -48,7 +48,7 @@
             </div>
         </nav>
 
-        <main class="mt-5 bg-company">
+        <main class="mt-3 bg-company">
             @yield('content')
         </main>
     </div>

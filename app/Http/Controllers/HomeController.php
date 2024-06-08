@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Empresa;
 use App\Models\Libro;
+use App\Models\OpIgv;
 class HomeController extends Controller
 {
     /**
@@ -39,6 +40,7 @@ class HomeController extends Controller
     {
         $empresa = Empresa::findOrFail($id);
         $libro = Libro::all();
-        return view('empresa.compra_venta', compact('empresa', 'libro'));
+        $opigv = OpIgv::all();
+        return view('empresa.compra_venta', compact('empresa', 'libro', 'opigv'));
     }
 }

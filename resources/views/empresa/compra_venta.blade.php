@@ -267,12 +267,16 @@
                                             placeholder="Tipo de Cambio" value="{{ old('tip_cam') }}" required>
                                     </div>
                                 </div>
+
                                 <div class="col-md-3">
                                     <div class="form-group mb-3">
                                         <label for="top_igv">Tipo de Operación IGV</label>
-                                        <input type="text" class="form-control" id="top_igv" name="top_igv"
-                                            placeholder="Tipo de Operación IGV" value="{{ old('top_igv') }}"
-                                            required>
+                                        <select class="form-control" id="libro" name="libro" required>
+                                            @foreach ($opigv as $o)
+                                                <option value="{{ $o->Id }}">{{ $o->Descripcion}}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
