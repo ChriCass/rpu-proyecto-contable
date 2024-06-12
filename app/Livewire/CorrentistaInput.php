@@ -9,8 +9,8 @@ use App\Models\Correntista;
 use Illuminate\Support\Facades\Log;
 
 class CorrentistaInput extends Component
-{
-    public $tdoc;
+{   public $data;
+   public $tdoc;
     public $correntista;
     public $errorMessage;
     public $responseData;
@@ -23,8 +23,6 @@ class CorrentistaInput extends Component
             'tdoc' => 'required',
             'correntista' => 'required',
         ]);
-
-        Log::info('Consultando con tipo de documento: ' . $this->tdoc . ' y número: ' . $this->correntista);
 
         if ($this->tdoc == 'RUC') {
             $this->consultarRUC();
@@ -45,8 +43,6 @@ class CorrentistaInput extends Component
         $ruc = $this->correntista;
 
         try {
-            Log::info('Consultando RUC API con número: ' . $ruc);
-
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
             ])->post('https://api.migo.pe/api/v1/ruc', [
@@ -54,20 +50,13 @@ class CorrentistaInput extends Component
                 'token' => 'oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
             ]);
 
-            Log::info('Código de respuesta de RUC API: ' . $response->status());
-            Log::info('Cuerpo de la respuesta de RUC API: ' . $response->body());
-
             if ($response->successful()) {
-                $data = $response->json();
-                $this->responseData = json_encode($data, JSON_PRETTY_PRINT);
-                Log::info('Respuesta de RUC API: ' . $this->responseData);
+                $this->responseData = $response->json();
             } else {
                 $this->errorMessage = 'Conexión no establecida con la API';
-                Log::error('Error en la respuesta de RUC API: ' . $response->body());
             }
         } catch (\Exception $e) {
             $this->errorMessage = 'Error al conectar con la API: ' . $e->getMessage();
-            Log::error('Excepción al conectar con la RUC API: ' . $e->getMessage());
         }
     }
 
@@ -81,8 +70,6 @@ class CorrentistaInput extends Component
         $dni = $this->correntista;
 
         try {
-            Log::info('Consultando DNI API con número: ' . $dni);
-
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
             ])->post('https://api.migo.pe/api/v1/dni', [
@@ -90,20 +77,13 @@ class CorrentistaInput extends Component
                 'token' => 'oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
             ]);
 
-            Log::info('Código de respuesta de DNI API: ' . $response->status());
-            Log::info('Cuerpo de la respuesta de DNI API: ' . $response->body());
-
             if ($response->successful()) {
-                $data = $response->json();
-                $this->responseData = json_encode($data, JSON_PRETTY_PRINT);
-                Log::info('Respuesta de DNI API: ' . $this->responseData);
+                $this->responseData = $response->json();
             } else {
                 $this->errorMessage = 'Conexión no establecida con la API';
-                Log::error('Error en la respuesta de DNI API: ' . $response->body());
             }
         } catch (\Exception $e) {
             $this->errorMessage = 'Error al conectar con la API: ' . $e->getMessage();
-            Log::error('Excepción al conectar con la DNI API: ' . $e->getMessage());
         }
     }
 

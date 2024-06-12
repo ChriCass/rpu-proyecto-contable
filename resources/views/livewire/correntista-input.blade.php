@@ -19,7 +19,11 @@
     
     @if($responseData)
         <div class="alert alert-success mt-3">
-            <pre>{{ $responseData }}</pre>
+            @if($tdoc == 'RUC')
+                {{ $responseData['nombre_o_razon_social'] ?? 'Nombre no encontrado' }}
+            @elseif($tdoc == 'DNI')
+                {{ $responseData['nombre'] ?? 'Nombre no encontrado' }}
+            @endif
         </div>
     @endif
 </div>
