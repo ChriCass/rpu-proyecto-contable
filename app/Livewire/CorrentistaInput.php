@@ -5,19 +5,26 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use App\Models\Correntista;
+use Illuminate\Support\Facades\Log;
 
 class CorrentistaInput extends Component
 {
     public $tdoc;
     public $correntista;
     public $errorMessage;
+    public $responseData;
 
     public function consultarCorrentista()
     {
+        $this->reset('errorMessage', 'responseData');
+
         $this->validate([
             'tdoc' => 'required',
             'correntista' => 'required',
         ]);
+
+        Log::info('Consultando con tipo de documento: ' . $this->tdoc . ' y número: ' . $this->correntista);
 
         if ($this->tdoc == 'RUC') {
             $this->consultarRUC();
@@ -36,39 +43,31 @@ class CorrentistaInput extends Component
         }
 
         $ruc = $this->correntista;
-        $existe = DB::table('g_conrrentistas')->where('ruc_emisor', $ruc)->first();
 
-        if ($existe) {
-            $this->dispatch('razonSocialEncontrada', $existe->nombre_o_razon_social);
-        } else {
+        try {
+            Log::info('Consultando RUC API con número: ' . $ruc);
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
-            ])->get('https://api.migo.pe/api/v1/ruc', [
-                'ruc' => $ruc
+            ])->post('https://api.migo.pe/api/v1/ruc', [
+                'ruc' => $ruc,
+                'token' => 'oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
             ]);
+
+            Log::info('Código de respuesta de RUC API: ' . $response->status());
+            Log::info('Cuerpo de la respuesta de RUC API: ' . $response->body());
 
             if ($response->successful()) {
                 $data = $response->json();
-
-                if (isset($data['nombre_o_razon_social'])) {
-                    $this->dispatch('razonSocialEncontrada', $data['nombre_o_razon_social']);
-
-                    DB::table('g_conrrentistas')->insert([
-                        'ruc_emisor' => $data['ruc'] ?? '',
-                        'nombre_o_razon_social' => $data['nombre_o_razon_social'] ?? '',
-                        'estado_del_contribuyente' => $data['estado_del_contribuyente'] ?? '',
-                        'condicion_de_domicilio' => $data['condicion_de_domicilio'] ?? '',
-                        'provincia' => $data['provincia'] ?? '',
-                        'distrito' => $data['distrito'] ?? '',
-                        'direccion' => $data['direccion'] ?? '',
-                        'idt02doc' => '6'
-                    ]);
-                } else {
-                    $this->errorMessage = 'Datos no encontrados en la API';
-                }
+                $this->responseData = json_encode($data, JSON_PRETTY_PRINT);
+                Log::info('Respuesta de RUC API: ' . $this->responseData);
             } else {
                 $this->errorMessage = 'Conexión no establecida con la API';
+                Log::error('Error en la respuesta de RUC API: ' . $response->body());
             }
+        } catch (\Exception $e) {
+            $this->errorMessage = 'Error al conectar con la API: ' . $e->getMessage();
+            Log::error('Excepción al conectar con la RUC API: ' . $e->getMessage());
         }
     }
 
@@ -80,39 +79,31 @@ class CorrentistaInput extends Component
         }
 
         $dni = $this->correntista;
-        $existe = DB::table('g_conrrentistas')->where('ruc_emisor', $dni)->first();
 
-        if ($existe) {
-            $this->dispatch('razonSocialEncontrada', $existe->nombre_o_razon_social);
-        } else {
+        try {
+            Log::info('Consultando DNI API con número: ' . $dni);
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
-            ])->get('https://api.migo.pe/api/v1/dni', [
-                'dni' => $dni
+            ])->post('https://api.migo.pe/api/v1/dni', [
+                'dni' => $dni,
+                'token' => 'oxzdu4ZBlghIaetvqYux8CocEVJABQAkptMBcpUyQVhXr5sF3vb0ABZxJF40'
             ]);
+
+            Log::info('Código de respuesta de DNI API: ' . $response->status());
+            Log::info('Cuerpo de la respuesta de DNI API: ' . $response->body());
 
             if ($response->successful()) {
                 $data = $response->json();
-
-                if (isset($data['nombre'])) {
-                    $this->dispatch('razonSocialEncontrada', $data['nombre']);
-
-                    DB::table('g_conrrentistas')->insert([
-                        'ruc_emisor' => $data['dni'] ?? '',
-                        'nombre_o_razon_social' => $data['nombre'] ?? '',
-                        'estado_del_contribuyente' => '-',
-                        'condicion_de_domicilio' => '-',
-                        'provincia' => '-',
-                        'distrito' => '-',
-                        'direccion' => '-',
-                        'idt02doc' => '1'
-                    ]);
-                } else {
-                    $this->errorMessage = 'Datos no encontrados en la API';
-                }
+                $this->responseData = json_encode($data, JSON_PRETTY_PRINT);
+                Log::info('Respuesta de DNI API: ' . $this->responseData);
             } else {
                 $this->errorMessage = 'Conexión no establecida con la API';
+                Log::error('Error en la respuesta de DNI API: ' . $response->body());
             }
+        } catch (\Exception $e) {
+            $this->errorMessage = 'Error al conectar con la API: ' . $e->getMessage();
+            Log::error('Excepción al conectar con la DNI API: ' . $e->getMessage());
         }
     }
 
