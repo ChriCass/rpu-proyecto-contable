@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <livewire:input-respuesta-correntista />
+ 
             </div>
         </div>
     
