@@ -29,7 +29,7 @@
                     <label class="fw-bold" for="libro">Libro</label>
                     <select class="form-control" id="libro" wire:model="libro" required>
                         <option value="">Seleccionar tipo de libro</option>
-                        @foreach ($libro as $libroItem)
+                        @foreach ($libros as $libroItem)
                             <option value="{{ $libroItem->N }}">{{ $libroItem->DESCRIPCION }}</option>
                         @endforeach
                     </select>
@@ -99,7 +99,7 @@
                     <label for="opigv">Tipo de Operación IGV</label>
                     <select class="form-control" id="opigv" wire:model="opigv" required>
                         <option value="">Seleccionar tipo op IGV</option>
-                        @foreach ($opigv as $o)
+                        @foreach ($opigvs as $o)
                             <option value="{{ $o->Id }}">{{ $o->Descripcion }}</option>
                         @endforeach
                     </select>
@@ -334,7 +334,7 @@
                     <label for="estado_doc">Estado del Documento</label>
                     <select class="form-control" id="estado_doc" wire:model="estado_doc" required>
                         <option value="">Selecciona Estado doc</option>
-                        @foreach ($estado_doc as $ed)
+                        @foreach ($estado_docs as $ed)
                             <option value="{{ $ed->id }}">{{ $ed->descripcion }}</option>
                         @endforeach
                     </select>
@@ -346,7 +346,7 @@
                     <label for="estado">Estado</label>
                     <select class="form-control" id="estado" wire:model="estado" required>
                         <option value="">Selecciona Estado</option>
-                        @foreach ($estado as $c)
+                        @foreach ($estados as $c)
                             <option value="{{ $c->N }}">{{ $c->DESCRIPCION }}</option>
                         @endforeach
                     </select>
@@ -362,5 +362,4 @@
             </div>
         </div>
     </form>
-    
 </div>

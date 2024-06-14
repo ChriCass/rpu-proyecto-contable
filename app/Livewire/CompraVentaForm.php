@@ -7,7 +7,7 @@ use App\Models\Libro;
 use App\Models\Opigv;
 use App\Models\EstadoDocumento;
 use App\Models\Estado;
-use App\Http\Requests\CompraVentaRequest;
+use Illuminate\Support\Facades\Log;
 class CompraVentaForm extends Component
 {   public $libro, $fecha_doc, $fecha_ven, $id_type, $ser, $num, $cod_moneda;
     public $tip_cam, $opigv, $bas_imp, $igv, $no_gravadas, $isc, $imp_bol_pla, $otro_tributo;
@@ -16,32 +16,44 @@ class CompraVentaForm extends Component
     public $fec_emi_detr, $num_const_der, $tiene_detracc, $cta_detracc, $mont_detracc;
     public $ref_int1, $ref_int2, $ref_int3, $estado_doc, $estado;
 
-    public function submit(CompraVentaRequest $request)
-    {
-        $validatedData = $request->validated();
-
-        // Emit an event to the table component to add a new row
-        $this->emit('addRow', $validatedData);
-
-        // Show success message
-        session()->flash('message', 'Datos procesados correctamente.');
-    }
-
+    public $libros, $opigvs, $estado_docs, $estados;
+ 
     public function mount()
 {
-    $this->libro = Libro::all();
-    $this->opigv = OpIgv::all();
-    $this->estado_doc = EstadoDocumento::all();
-    $this->estado = Estado::all();
+    $this->libros = Libro::all();
+    $this->opigvs = Opigv::all();
+    $this->estado_docs = EstadoDocumento::all();
+    $this->estados = Estado::all();
+}
+
+public function submit()
+{
+    // Emitir el evento 'dataSubmitted' con los datos del formulario
+    $data = $this->validate([
+        'libro' => 'required',
+        'fecha_doc' => 'required|date',
+        'fecha_ven' => 'required|date',
+        'num' => 'required',
+        'cod_moneda' => 'required',
+        'tip_cam' => 'required',
+        'opigv' => 'required',
+        'bas_imp' => 'required',
+        'igv' => 'required',
+        'glosa' => 'required',
+        'cnta1' => 'required',
+        'mon1' => 'required',
+        'estado_doc' => 'required',
+        'estado' => 'required'
+    ]);
+
+    Log::info('Data submitted: ', $data);
+
+ // Emitir el evento 'dataSubmitted' con los datos del formulario
+ $this->dispatch('dataSubmitted', $data);
 }
 
     public function render()
     {
-        return view('livewire.compra-venta-form', [
-            'libro' => Libro::all(),
-            'opigv' => Opigv::all(),
-            'estado_doc' => EstadoDocumento::all(),
-            'estado' => Estado::all(),
-        ]);
+        return view('livewire.compra-venta-form' );
     }
 }
