@@ -358,7 +358,7 @@
         <!-- Botón de Envío -->
         <div class="row mt-3">
             <div class="col-md-12 text-center">
-                <button type="submit" class="btn text-light btn-primary">Agregar a lista</button>
+                <button  type="submit" class="btn text-light btn-primary">Agregar a lista</button>
             </div>
         </div>
     </form>

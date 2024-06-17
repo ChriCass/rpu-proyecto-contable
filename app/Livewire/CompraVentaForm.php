@@ -26,6 +26,8 @@ class CompraVentaForm extends Component
     $this->estados = Estado::all();
 }
 
+
+
 public function submit()
 {
     // Emitir el evento 'dataSubmitted' con los datos del formulario
