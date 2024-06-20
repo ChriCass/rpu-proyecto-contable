@@ -33,6 +33,7 @@ class CorrentistaInput extends Component
         if ($correntistaConsulta) {
             Log::info("Correntista encontrado en la base de datos: ", $correntistaConsulta->toArray());
             $this->responseData = $correntistaConsulta;
+            $this->dispatch('correntistaEncontrado', $this->responseData);
         } else {
             Log::info("Correntista no encontrado en la base de datos, procediendo a consultar la API");
 
@@ -68,6 +69,7 @@ class CorrentistaInput extends Component
             if ($response->successful()) {
                 Log::info("Respuesta exitosa de la API para el RUC: ", $response->json());
                 $this->responseData = $response->json();
+                $this->dispatch('correntistaEncontrado', $this->responseData);
             } else {
                 $this->errorMessage = 'Conexión no establecida con la API';
                 Log::error("Fallo en la conexión con la API para el RUC: {$ruc}");
@@ -100,6 +102,7 @@ class CorrentistaInput extends Component
             if ($response->successful()) {
                 Log::info("Respuesta exitosa de la API para el DNI: ", $response->json());
                 $this->responseData = $response->json();
+                $this->dispatch('correntistaEncontrado', $this->responseData);
             } else {
                 $this->errorMessage = 'Conexión no establecida con la API';
                 Log::error("Fallo en la conexión con la API para el DNI: {$dni}");
