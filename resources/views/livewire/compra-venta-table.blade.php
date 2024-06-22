@@ -38,7 +38,9 @@
                                                 @foreach(array_keys($data) as $key)
                                                     @if(is_array($data[$key]))
                                                         @foreach(array_keys($data[$key]) as $subKey)
-                                                            <th class="center">{{ ucfirst($subKey) }}</th>
+                                                            @if(!in_array($subKey, ['success']))  <!-- Exclude specific keys here -->
+                                                                <th class="center">{{ ucfirst($subKey) }}</th>
+                                                            @endif
                                                         @endforeach
                                                     @else
                                                         <th class="center">{{ ucfirst($key) }}</th>
@@ -54,10 +56,24 @@
                                                 @foreach($data as $key => $value)
                                                     @if(is_array($value))
                                                         @foreach($value as $subKey => $subValue)
-                                                            <td class="center">{{ $subValue }}</td>
+                                                            @if(!in_array($subKey, ['success']))  <!-- Exclude specific keys here -->
+                                                                <td class="center">{{ $subValue }}</td>
+                                                            @endif
                                                         @endforeach
                                                     @else
-                                                        <td class="center">{{ $value }}</td>
+                                                        <td class="center">
+                                                            @if ($key == 'libro')
+                                                                {{ $libros->where('N', $value)->first()->DESCRIPCION ?? $value }}
+                                                            @elseif ($key == 'opigv')
+                                                                {{ $opigvs->where('Id', $value)->first()->Descripcion ?? $value }}
+                                                            @elseif ($key == 'estado_doc')
+                                                                {{ $estado_docs->where('id', $value)->first()->descripcion ?? $value }}
+                                                            @elseif ($key == 'estado')
+                                                                {{ $estados->where('N', $value)->first()->DESCRIPCION ?? $value }}
+                                                            @else
+                                                                {{ $value }}
+                                                            @endif
+                                                        </td>
                                                     @endif
                                                 @endforeach
                                                 <td class="center">
