@@ -77,10 +77,10 @@
                                                     @endif
                                                 @endforeach
                                                 <td class="center">
-                                                    <a href="#" class="btn btn-tbl-edit">
+                                                    <a href="#"  class="btn btn-tbl-edit">
                                                         <i class="material-icons">create</i>
                                                     </a>
-                                                    <a href="#" class="btn btn-tbl-delete">
+                                                    <a href="#" wire:click="NoMoreRow" class="btn btn-tbl-delete">
                                                         <i class="material-icons">delete_forever</i>
                                                     </a>
                                                 </td>

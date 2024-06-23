@@ -32,6 +32,10 @@ class CompraVentaTable extends Component
          $this->estados = Estado::all();
     }
 
+    public function NoMoreRow()
+    {
+        $this->data = [];
+    }
      
     public function render()
     {
