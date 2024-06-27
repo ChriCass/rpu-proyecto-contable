@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Libro;
+use App\Models\PlanContable;
 use App\Models\Opigv;
 use App\Models\EstadoDocumento;
 use App\Models\Estado;
@@ -37,6 +38,37 @@ class CompraVentaForm extends Component
         $this->correntistaData = $data;
     }
 
+    private function calcularMontos(&$data)
+    {
+        // Realizar cálculos según la moneda
+        if ($this->cod_moneda == 'USD') {
+            $data['mon1'] = round($this->mon1 * $this->tip_cam, 2);
+            $data['mon2'] = round($this->mon2 * $this->tip_cam, 2);
+            $data['mon3'] = round($this->mon3 * $this->tip_cam, 2);
+            $data['igv'] = round($this->igv * $this->tip_cam, 2);
+            $data['otro_tributo'] = round($this->otro_tributo * $this->tip_cam, 2);
+            $data['bas_imp'] = round($this->bas_imp * $this->tip_cam, 2);
+        }
+    }
+
+    private function agregarDestinos($cuenta)
+    {
+        // Realizar consulta para obtener destinos
+        $destinos = PlanContable::select('Dest1D', 'Dest1H', 'Dest2D', 'Dest2H')
+                                ->where('CtaCtable', $cuenta)
+                                ->first();
+
+        $resultados = [];
+        if ($destinos) {
+            foreach ($destinos->toArray() as $dest) {
+                if (trim($dest) !== '') {
+                    $resultados[] = $dest;
+                }
+            }
+        }
+        return $resultados;
+    }
+
 
     public function submit()
     {
@@ -60,15 +92,25 @@ class CompraVentaForm extends Component
 
         Log::info('Data submitted: ', $data);
 
-        // Emitir el evento 'dataSubmitted' con los datos del formulario
-        $this->dispatch('dataSubmitted', $data);
         // Agregar datos del correntista
         $data['correntistaData'] = $this->correntistaData;
 
-        Log::info('Data submitted: ', $data);
+        // Realizar cálculos de montos
+        $this->calcularMontos($data);
 
+        // Obtener y agregar destinos para las cuentas
+        foreach (['cnta1', 'cnta2', 'cnta3'] as $cuenta) {
+            if ($this->$cuenta) {
+                $data["{$cuenta}_destinos"] = $this->agregarDestinos($this->$cuenta);
+            }
+        }
+
+        Log::info('Data with calculations and destinations: ', $data);
+
+        // Emitir el evento 'dataSubmitted' con los datos del formulario
         $this->dispatch('dataSubmitted', $data);
     }
+
 
     public function render()
     {
