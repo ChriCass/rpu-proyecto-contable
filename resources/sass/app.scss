@@ -99,10 +99,10 @@
    background: #2c0b8e;
  }
  
- .card {
+ .card-h {
    transition: transform 0.3s ease-in-out; /* Suaviza el crecimiento y la reducción */
 }
-.card:hover {
+.card-h:hover {
    transform: scale(1.05); /* Aumenta el tamaño de la tarjeta un 5% */
 }
 

@@ -8,7 +8,7 @@
         </div>
         <div class="d-flex justify-content-center mt-5">
             @foreach ($empresas as $empresa)
-                <div class="card shadow mx-5" style="width: 18rem;">
+                <div class="card card-h shadow mx-5" style="width: 18rem;">
                     <img src="{{ asset('images/constructor.png') }}" class="card-img-top" alt="Imagen de la empresa">
                     <div class="card-body">
                         <h5 class="card-title fw-bolder">{{ $empresa->Nombre }}</h5>
