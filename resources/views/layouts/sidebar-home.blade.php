@@ -135,11 +135,16 @@
                             <span>Compra-Venta</span>
                         </a>
                     </li>
-
+                    <li class="{{ Route::currentRouteName() == 'compraVenta' ? 'active' : '' }}">
+                        <a href="{{ route('compraVenta', ['id' => $empresa->id]) }}">
+                            <i data-feather="monitor"></i>
+                            <span>Registrar Asiento</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="#" onClick="return false;" class="menu-toggle">
                             <i data-feather="briefcase"></i>
-                            <span>Registrar Asiento</span>
+                            <span>Registros</span>
                         </a>
                         <ul class="ml-menu">
                             <li>

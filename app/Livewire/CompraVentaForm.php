@@ -114,6 +114,6 @@ class CompraVentaForm extends Component
 
     public function render()
     {
-        return view('livewire.compra-venta-form');
+        return view('livewire.compra-venta.compra-venta-form');
     }
 }

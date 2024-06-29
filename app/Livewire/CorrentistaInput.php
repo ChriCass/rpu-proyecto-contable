@@ -114,6 +114,6 @@ class CorrentistaInput extends Component
     }
     public function render()
     {
-        return view('livewire.correntista-input');
+        return view('livewire.compra-venta.correntista-input');
     }
 }

@@ -39,7 +39,7 @@ class CompraVentaTable extends Component
      
     public function render()
     {
-        return view('livewire.compra-venta-table', ['data'=>$this->data, 'libros' => $this->libros,
+        return view('livewire.compra-venta.compra-venta-table', ['data'=>$this->data, 'libros' => $this->libros,
             'opigvs' => $this->opigvs,
             'estado_docs' => $this->estado_docs,
             'estados' => $this->estados] );
