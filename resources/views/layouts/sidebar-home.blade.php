@@ -135,8 +135,8 @@
                             <span>Compra-Venta</span>
                         </a>
                     </li>
-                    <li class="{{ Route::currentRouteName() == 'compraVenta' ? 'active' : '' }}">
-                        <a href="{{ route('compraVenta', ['id' => $empresa->id]) }}">
+                    <li class="{{ Route::currentRouteName() == 'registrarAsiento' ? 'active' : '' }}">
+                        <a href="{{ route('registrarAsiento', ['id' => $empresa->id]) }}">
                             <i data-feather="monitor"></i>
                             <span>Registrar Asiento</span>
                         </a>

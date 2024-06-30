@@ -20,7 +20,6 @@ class CompraVentaForm extends Component
     public $ref_int1, $ref_int2, $ref_int3, $estado_doc, $estado;
 
     public $libros, $opigvs, $estado_docs, $estados;
-
     public $correntistaData;
 
     public function mount()
@@ -51,7 +50,7 @@ class CompraVentaForm extends Component
         }
     }
 
-    private function agregarDestinos($cuenta)
+    private function agregarDestinos($cuenta, $monto, $cc, $ref)
     {
         // Realizar consulta para obtener destinos
         $destinos = PlanContable::select('Dest1D', 'Dest1H', 'Dest2D', 'Dest2H')
@@ -62,13 +61,17 @@ class CompraVentaForm extends Component
         if ($destinos) {
             foreach ($destinos->toArray() as $dest) {
                 if (trim($dest) !== '') {
-                    $resultados[] = $dest;
+                    $resultados[] = [
+                        'cuenta' => $dest,
+                        'monto' => $monto,
+                        'cc' => $cc,
+                        'ref' => $ref
+                    ];
                 }
             }
         }
         return $resultados;
     }
-
 
     public function submit()
     {
@@ -101,7 +104,13 @@ class CompraVentaForm extends Component
         // Obtener y agregar destinos para las cuentas
         foreach (['cnta1', 'cnta2', 'cnta3'] as $cuenta) {
             if ($this->$cuenta) {
-                $data["{$cuenta}_destinos"] = $this->agregarDestinos($this->$cuenta);
+                $monto = $data['mon1']; // Ajustar según la lógica necesaria para cada cuenta
+                $cc = $this->{"cc" . substr($cuenta, -1)};
+                $ref = $this->{"ref_int" . substr($cuenta, -1)};
+                $cuentaDestinos = $this->agregarDestinos($this->$cuenta, $monto, $cc, $ref);
+                if (!empty($cuentaDestinos)) {
+                    $data["{$cuenta}_destinos"] = $cuentaDestinos;
+                }
             }
         }
 
@@ -110,7 +119,6 @@ class CompraVentaForm extends Component
         // Emitir el evento 'dataSubmitted' con los datos del formulario
         $this->dispatch('dataSubmitted', $data);
     }
-
 
     public function render()
     {

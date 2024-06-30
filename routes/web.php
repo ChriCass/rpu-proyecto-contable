@@ -27,3 +27,5 @@ Route::get('/empresa/{id}', [HomeController::class, 'show'])->name('empresa.show
 
 // Ruta para acceder a la vista de compra-venta de una empresa específica
 Route::get('/empresa/{id}/compra-venta', [HomeController::class, 'compraVenta'])->name('compraVenta');
+
+Route::get('/empresa/{id}/registrar-asiento', [HomeController::class, 'registrarAsiento'])->name('registrarAsiento');

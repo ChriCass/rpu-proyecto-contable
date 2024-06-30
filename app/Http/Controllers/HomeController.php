@@ -43,4 +43,10 @@ class HomeController extends Controller
         $opigv = OpIgv::all();
         return view('empresa.compra_venta', compact('empresa', 'libro', 'opigv'));
     }
+
+    public function registrarAsiento($id)
+    {
+        $empresa = Empresa::findOrFail($id);
+        return view('empresa.registrar_asiento', compact('empresa'));
+    }
 }
