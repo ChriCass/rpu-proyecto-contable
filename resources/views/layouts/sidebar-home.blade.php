@@ -14,8 +14,8 @@
     <!-- You can choose a theme from css/styles instead of get all themes -->
     <link href="{{ asset('css/styles/theme-green.css') }}" rel="stylesheet" />
 
-
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         * {
             font-family: 'Nunito', sans-serif;
@@ -221,8 +221,9 @@
     <script src="{{ asset('js/bundles/apexcharts.min.js') }}"></script>
     <script src="{{ asset('js/pages/index.js') }}"></script>
     <script src="{{ asset('js/pages/todo/todo.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @livewireScripts
+    
 </body>
 
 </html>

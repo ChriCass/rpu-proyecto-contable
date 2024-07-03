@@ -30,9 +30,12 @@
                     <select class="form-control" id="libro" wire:model="libro" required>
                         <option value="">Seleccionar tipo de libro</option>
                         @foreach ($libros as $libroItem)
-                            <option value="{{ $libroItem->N }}">{{ $libroItem->DESCRIPCION }}</option>
+                            @if (in_array($libroItem->N, ['01', '02']))
+                                <option value="{{ $libroItem->N }}">{{ $libroItem->DESCRIPCION }}</option>
+                            @endif
                         @endforeach
                     </select>
+                    
                     @error('libro') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -51,16 +54,21 @@
                 </div>
             </div>
             <div class="col-md-3">
- 
+                
             </div>
         </div>
-    
+        
         <!-- Segunda fila de inputs -->
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group mb-3">
-                    <label class="fw-bold" for="id_type">Tipo de Identificación</label>
-                    <input type="text" class="form-control" id="id_type" wire:model="id_type">
+                    <label class="fw-bold" for="tdoc">Tipo de documento de pago</label>
+                    <select class="form-control" id="tdoc" wire:model="tdoc" required>
+                        <option value="">Seleccionar tipo de documento de pago</option>
+                        @foreach ($ComprobantesPago as $comprobante)
+                            <option value="{{ $comprobante->id }}">{{ $comprobante->DESCRIPCION }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="col-md-3">
@@ -79,20 +87,21 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label class="fw-bold" for="cod_moneda">Código de Moneda</label>
-                    <input type="text" class="form-control" id="cod_moneda" wire:model="cod_moneda" required>
+                    <select class="form-control" id="cod_moneda" wire:model="cod_moneda" required>
+                        <option value="">Seleccionar moneda</option>
+                        <option value="PEN">PEN</option>
+                        <option value="USD">USD</option>
+                    </select>
                     @error('cod_moneda') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+            
         </div>
     
         <!-- Tercera fila de inputs -->
         <div class="row">
             <div class="col-md-3">
-                <div class="form-group mb-3">
-                    <label class="fw-bold" for="tip_cam">Tipo de Cambio</label>
-                    <input type="text" class="form-control" id="tip_cam" wire:model="tip_cam" required>
-                    @error('tip_cam') <span class="text-danger">{{ $message }}</span> @enderror
-                </div>
+                <livewire:tipo-cambio-sunat />
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
@@ -363,3 +372,30 @@
         </div>
     </form>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('customSelectInput');
+        const menu = document.getElementById('customSelectMenu');
+        const items = menu.getElementsByClassName('dropdown-item');
+
+        input.addEventListener('keyup', function () {
+            const filter = input.value.toLowerCase();
+            for (let i = 0; i < items.length; i++) {
+                const text = items[i].textContent || items[i].innerText;
+                items[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+            }
+        });
+
+        for (let i = 0; i < items.length; i++) {
+            items[i].addEventListener('click', function (e) {
+                e.preventDefault();
+                input.value = this.textContent;
+                input.setAttribute('data-value', this.getAttribute('data-value'));
+                input.dispatchEvent(new Event('change'));  // Opcional: para manejar cambios adicionales
+            });
+        }
+    });
+
+</script>
