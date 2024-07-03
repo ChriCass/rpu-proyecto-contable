@@ -63,7 +63,7 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label class="fw-bold" for="tdoc">Tipo de documento de pago</label>
-                    <select class="form-control" id="tdoc" wire:model="tdoc" required>
+                    <select class="form-control custom-select" id="tdoc" wire:model="tdoc" required>
                         <option value="">Seleccionar tipo de documento de pago</option>
                         @foreach ($ComprobantesPago as $comprobante)
                             <option value="{{ $comprobante->id }}">{{ $comprobante->DESCRIPCION }}</option>

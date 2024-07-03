@@ -39,6 +39,13 @@ class CompraVentaForm extends Component
         $this->correntistaData = $data;
     }
 
+    #[On('tipoCambioEncontrado')]
+    public function handleTipoCambioEncontrado($data)
+    {
+        Log::info('El tipo de cambio encontrado es: ', $data);
+        $this->tip_cam = is_numeric($data['precio_compra']) ? round((float)$data['precio_compra'], 2) : 0.00;
+    }
+    
     private function calcularMontos(&$data)
     {
         // Realizar cálculos según la moneda
@@ -57,14 +64,19 @@ class CompraVentaForm extends Component
         // Realizar consulta para obtener destinos
         $destinos = PlanContable::select('Dest1D', 'Dest1H', 'Dest2D', 'Dest2H')
                                 ->where('CtaCtable', $cuenta)
-                                ->first(); ///zñzdir log para la consulta -> 
-
+                                ->first();
+    
+        Log::info('Consulta de destinos para la cuenta: ' . $cuenta, ['destinos' => $destinos]);
+    
         $resultados = [];
         if ($destinos) {
-            foreach ($destinos->toArray() as $dest) {
+            $destinosArray = $destinos->toArray();
+            foreach ($destinosArray as $key => $dest) {
                 if (trim($dest) !== '') {
+                    $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 1 : 2;
                     $resultados[] = [
                         'cuenta' => $dest,
+                        'DebeHaber' => $DebeHaber,
                         'monto' => $monto,
                         'cc' => $cc,
                         'ref' => $ref
@@ -74,20 +86,21 @@ class CompraVentaForm extends Component
         }
         return $resultados;
     }
+    
 
     public function submit()
     {
         // Emitir el evento 'dataSubmitted' con los datos del formulario
-        $data = $this->validate([
+        $validatedData = $this->validate([
             'libro' => 'required',
             'fecha_doc' => 'required|date',
             'fecha_ven' => 'required|date',
             'num' => 'required',
             'cod_moneda' => 'required|in:PEN,USD',
-            'tip_cam' => 'required',
             'opigv' => 'required',
             'bas_imp' => 'required',
             'igv' => 'required',
+            'cnta_precio' =>'required',
             'glosa' => 'required',
             'cnta1' => 'required',
             'mon1' => 'required',
@@ -95,18 +108,39 @@ class CompraVentaForm extends Component
             'estado' => 'required'
         ]);
 
-        Log::info('Data submitted: ', $data);
+        Log::info('Data submitted: ', $validatedData);
+
+        // Preparar $data solo con los campos que tienen valores
+        $data = [];
+        foreach ($validatedData as $key => $value) {
+            if (!empty($value)) {
+                $data[$key] = $value;
+            }
+        }
+
+        if($this->libro == '01')
+        {
+            $data['cuenta_igv'] = 1673;
+        }
+    
 
         // Agregar datos del correntista
-        $data['correntistaData'] = $this->correntistaData;
+        if (!empty($this->correntistaData)) {
+            $data['correntistaData'] = $this->correntistaData;
+        }
+
+                // Incluir cnta_precio si tiene un valor
+                if (!empty($this->cnta_precio)) {
+                    $data['cnta_precio'] = $this->cnta_precio;
+                }
 
         // Realizar cálculos de montos
         $this->calcularMontos($data);
 
         // Obtener y agregar destinos para las cuentas
         foreach (['cnta1', 'cnta2', 'cnta3'] as $cuenta) {
-            if ($this->$cuenta) {
-                $monto = $data['mon1']; // Ajustar según la lógica necesaria para cada cuenta
+            if (!empty($this->$cuenta)) {
+                $monto = $this->{"mon" . substr($cuenta, -1)};
                 $cc = $this->{"cc" . substr($cuenta, -1)};
                 $ref = $this->{"ref_int" . substr($cuenta, -1)};
                 $cuentaDestinos = $this->agregarDestinos($this->$cuenta, $monto, $cc, $ref);
@@ -121,6 +155,7 @@ class CompraVentaForm extends Component
         // Emitir el evento 'dataSubmitted' con los datos del formulario
         $this->dispatch('dataSubmitted', $data);
     }
+
 
     public function render()
     {
