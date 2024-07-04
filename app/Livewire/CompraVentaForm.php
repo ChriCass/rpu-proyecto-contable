@@ -15,7 +15,7 @@ class CompraVentaForm extends Component
 {
     public $libro, $fecha_doc, $fecha_ven, $tdoc, $ser, $num, $cod_moneda;
     public $tip_cam, $opigv, $bas_imp, $igv, $no_gravadas, $isc, $imp_bol_pla, $otro_tributo;
-    public $precio, $glosa, $cnta1, $cnta2, $cnta3, $cnta_precio, $mon1, $mon2, $mon3;
+    public $precio, $glosa, $cnta_precio, $mon1, $mon2, $mon3;
     public $cc1, $cc2, $cc3, $cta_otro_t, $fecha_emod, $tdoc_emod, $ser_emod, $num_emod;
     public $fec_emi_detr, $num_const_der, $tiene_detracc, $cta_detracc, $mont_detracc;
     public $ref_int1, $ref_int2, $ref_int3, $estado_doc, $estado;
@@ -23,6 +23,9 @@ class CompraVentaForm extends Component
     public $libros, $opigvs, $estado_docs, $estados, $ComprobantesPago;
     public $correntistaData;
 
+    public $cnta1 = ['cuenta'=>'', 'DebeHaber'=> null];
+    public $cnta2 = ['cuenta'=>'', 'DebeHaber'=> null];
+    public $cnta3 = ['cuenta'=>'', 'DebeHaber'=> null];
     public function mount()
     {
         $this->libros = Libro::all();
@@ -96,19 +99,21 @@ class CompraVentaForm extends Component
             'fecha_doc' => 'required|date',
             'fecha_ven' => 'required|date',
             'num' => 'required',
+            'tdoc'=>'required',
             'cod_moneda' => 'required|in:PEN,USD',
             'opigv' => 'required',
             'bas_imp' => 'required',
             'igv' => 'required',
             'cnta_precio' =>'required',
             'glosa' => 'required',
-            'cnta1' => 'required',
+            'cnta1.cuenta' => 'required',
             'mon1' => 'required',
             'estado_doc' => 'required',
             'estado' => 'required'
         ]);
 
         Log::info('Data submitted: ', $validatedData);
+        
 
         // Preparar $data solo con los campos que tienen valores
         $data = [];
@@ -118,12 +123,13 @@ class CompraVentaForm extends Component
             }
         }
 
+
         if($this->libro == '01')
         {
             $data['cuenta_igv'] = 1673;
         }
-    
 
+    
         // Agregar datos del correntista
         if (!empty($this->correntistaData)) {
             $data['correntistaData'] = $this->correntistaData;
@@ -136,20 +142,24 @@ class CompraVentaForm extends Component
 
         // Realizar cálculos de montos
         $this->calcularMontos($data);
-
         // Obtener y agregar destinos para las cuentas
-        foreach (['cnta1', 'cnta2', 'cnta3'] as $cuenta) {
-            if (!empty($this->$cuenta)) {
-                $monto = $this->{"mon" . substr($cuenta, -1)};
-                $cc = $this->{"cc" . substr($cuenta, -1)};
-                $ref = $this->{"ref_int" . substr($cuenta, -1)};
-                $cuentaDestinos = $this->agregarDestinos($this->$cuenta, $monto, $cc, $ref);
-                if (!empty($cuentaDestinos)) {
-                    $data["{$cuenta}_destinos"] = $cuentaDestinos;
+        foreach (['cnta1', 'cnta2', 'cnta3'] as $cuentaKey) {
+            $cuenta = $this->$cuentaKey;
+            if (!empty($cuenta['cuenta'])) {
+                // Añadir DebeHaber a la cuenta principal si tdoc no es '07'
+                if ($this->tdoc != '07' && is_null($cuenta['DebeHaber'])) {
+                    $cuenta['DebeHaber'] = 1;
                 }
+                $monto = $this->{"mon" . substr($cuentaKey, -1)};
+                $cc = $this->{"cc" . substr($cuentaKey, -1)};
+                $ref = $this->{"ref_int" . substr($cuentaKey, -1)};
+                $cuentaDestinos = $this->agregarDestinos($cuenta['cuenta'], $monto, $cc, $ref);
+                if (!empty($cuentaDestinos)) {
+                    $data["{$cuentaKey}_destinos"] = $cuentaDestinos;
+                }
+                $data[$cuentaKey] = $cuenta;
             }
         }
-
         Log::info('Data with calculations and destinations: ', $data);
 
         // Emitir el evento 'dataSubmitted' con los datos del formulario

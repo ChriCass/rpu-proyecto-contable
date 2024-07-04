@@ -66,7 +66,7 @@
                     <select class="form-control custom-select" id="tdoc" wire:model="tdoc" required>
                         <option value="">Seleccionar tipo de documento de pago</option>
                         @foreach ($ComprobantesPago as $comprobante)
-                            <option value="{{ $comprobante->id }}">{{ $comprobante->DESCRIPCION }}</option>
+                            <option value="{{ $comprobante->N}}">{{ $comprobante->DESCRIPCION }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -101,7 +101,7 @@
         <!-- Tercera fila de inputs -->
         <div class="row">
             <div class="col-md-3">
-                <livewire:tipo-cambio-sunat />
+                <livewire:cambio-sunat />
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
@@ -177,26 +177,23 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cnta1">Cuenta 1</label>
-                    <input type="text" class="form-control" id="cnta1" wire:model="cnta1" required>
-                    @error('cnta1') <span class="text-danger">{{ $message }}</span> @enderror
+                    <input type="text" class="form-control" id="cnta1" wire:model="cnta1.cuenta" required>
+                    @error('cnta1.cuenta') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cnta2">Cuenta 2</label>
-                    <input type="text" class="form-control" id="cnta2" wire:model="cnta2">
+                    <input type="text" class="form-control" id="cnta2" wire:model="cnta2.cuenta">
                 </div>
             </div>
-        </div>
-    
-        <!-- Sexta fila de inputs -->
-        <div class="row">
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cnta3">Cuenta 3</label>
-                    <input type="text" class="form-control" id="cnta3" wire:model="cnta3">
+                    <input type="text" class="form-control" id="cnta3" wire:model="cnta3.cuenta">
                 </div>
             </div>
+            
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cnta_precio">Cuenta Precio</label>
