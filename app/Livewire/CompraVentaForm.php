@@ -31,8 +31,13 @@ class CompraVentaForm extends Component
         $this->libros = Libro::all();
         $this->opigvs = Opigv::all();
         $this->estado_docs = EstadoDocumento::all();
-        $this->estados = Estado::all();
+        $this->estados = Estado::all()->map(function($estado) {
+            // Verificar que los estados se obtienen correctamente
+            Log::info('Estado cargado: ', ['N' => $estado->N, 'Descripcion' => $estado->DESCRIPCION]);
+            return $estado;
+        });
         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
+    
     }
 
     #[On('correntistaEncontrado')]
@@ -109,20 +114,23 @@ class CompraVentaForm extends Component
             'cnta1.cuenta' => 'required',
             'mon1' => 'required',
             'estado_doc' => 'required',
-            'estado' => 'required'
+            'estado' => 'required|integer' 
         ]);
 
+        // Verificar el valor del estado antes de procesar
+    Log::info('Estado validado: ', ['estado' => $this->estado]);
+
+        
         Log::info('Data submitted: ', $validatedData);
         
 
         // Preparar $data solo con los campos que tienen valores
         $data = [];
         foreach ($validatedData as $key => $value) {
-            if (!empty($value)) {
+            if (!is_null($value) || $value === 0) { // Asegúrate de incluir el valor 0
                 $data[$key] = $value;
             }
         }
-
 
         if($this->libro == '01')
         {

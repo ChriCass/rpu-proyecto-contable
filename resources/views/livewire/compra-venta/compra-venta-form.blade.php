@@ -349,16 +349,19 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
-                    <label for="estado">Estado</label>
+                    <label class="fw-bold" for="estado">Estado</label>
                     <select class="form-control" id="estado" wire:model="estado" required>
-                        <option value="">Selecciona Estado</option>
-                        @foreach ($estados as $c)
-                            <option value="{{ $c->N }}">{{ $c->DESCRIPCION }}</option>
+                        <option value="" disabled>Seleccione el estado</option>
+                        @foreach ($estados as $estado)
+                            <option value="{{ $estado->N }}" @if(old('estado') == $estado->N) selected @endif>
+                                {{ $estado->DESCRIPCION }}
+                            </option>
                         @endforeach
                     </select>
                     @error('estado') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+            
         </div>
     
         <!-- Botón de Envío -->
