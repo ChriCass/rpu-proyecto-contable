@@ -33,71 +33,76 @@
                     <div class="body">
                         <div class="table-responsive">
                             <table id="basicTable" class="table table-hover table-checkable order-column contact_list">
-                                <thead>
-                                    <tr>
-                                        @if (count($data) > 0)
-                                            <!-- Encabezados del correntista -->
-                                            @if (isset($data['correntistaData']))
-                                                @foreach ($data['correntistaData'] as $key => $value)
-                                                    <th class="center">{{ ucfirst($key) }}</th>
-                                                @endforeach
-                                            @endif
-                    
-                                            <!-- Encabezados de datos -->
-                                            @foreach (array_keys($data) as $key)
-                                                @if (!is_array($data[$key]) && $key !== 'cuenta_igv' && $key !== 'cnta1_destinos' && $key !== 'correntistaData')
-                                                    @if ($key === 'glosa')
-                                                        <th class="center">{{ ucfirst($key) }}</th>
-                                                        <th class="center">Cuentas</th> <!-- Nueva columna estática para Cuentas -->
-                                                    @else
-                                                        <th class="center">{{ ucfirst($key) }}</th>
-                                                        @if ($key === 'mon1')
-                                                            <th class="center">DebeHaber</th> <!-- Nueva columna para DebeHaber -->
-                                                        @endif
-                                                    @endif
-                                                @endif
-                                            @endforeach
-                                            <th class="center">Action</th>
-                                        @endif
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (!empty($data))
-                                        <!-- Original row -->
+                                @if (!empty($data))
+                                    <thead>
                                         <tr>
-                                            <!-- Valores del correntista -->
-                                            @if (isset($data['correntistaData']))
-                                                @foreach ($data['correntistaData'] as $key => $value)
-                                                    <td class="center">{{ $value }}</td>
-                                                @endforeach
-                                            @endif
-                    
-                                            <!-- Valores de datos -->
-                                            @foreach ($data as $key => $value)
-                                                @if (!is_array($value) && $key !== 'cuenta_igv' && $key !== 'cnta1_destinos' && $key !== 'correntistaData')
-                                                    @if ($key === 'glosa')
-                                                        <td class="center">{{ $value }}</td>
-                                                        <td class="center">{{ $data['cnta1']['cuenta'] ?? '' }}</td>
-                                                    @else
-                                                        <td class="center">
-                                                            @if ($key == 'libro')
-                                                                {{ $libros->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                            @elseif ($key == 'opigv')
-                                                                {{ $opigvs->where('Id', $value)->first()->Descripcion ?? $value }}
-                                                            @elseif ($key == 'estado_doc')
-                                                                {{ $estado_docs->where('id', $value)->first()->descripcion ?? $value }}
-                                                            @elseif ($key == 'estado')
-                                                                {{ $estados->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                            @else
-                                                                {{ is_array($value) ? '' : $value }}
-                                                            @endif
-                                                        </td>
-                                                        @if ($key === 'mon1')
-                                                            <td class="center">{{ $data['cnta1']['DebeHaber'] ?? '' }}</td>
-                                                        @endif
-                                                    @endif
-                                                @endif
-                                            @endforeach
+                                            <th class="center">DNI</th>
+                                            <th class="center">Nombre</th>
+                                            <th class="center">Libro</th>
+                                            <th class="center">Fecha Doc</th>
+                                            <th class="center">Fecha Ven</th>
+                                            <th class="center">Tdoc</th>
+                                            <th class="center">Ser</th>
+                                            <th class="center">Num</th>
+                                            <th class="center">Cod Moneda</th>
+                                            <th class="center">Tip Cam</th>
+                                            <th class="center">Opigv</th>
+                                            <th class="center">Bas Imp</th>
+                                            <th class="center">Igv</th>
+                                            <th class="center">No Gravadas</th>
+                                            <th class="center">Isc</th>
+                                            <th class="center">Imp Bol Pla</th>
+                                            <th class="center">Otro Tributo</th>
+                                            <th class="center">Precio</th>
+                                            <th class="center">Glosa</th>
+                                            <th class="center">Cuentas</th>
+                                            <th class="center">Mon1</th>
+                                            <th class="center">Cc1</th>
+                                            <th class="center">Ref Int1</th>
+                                            <th class="center">Mon2</th>
+                                            <th class="center">Cc2</th>
+                                            <th class="center">Ref Int2</th>
+                                            <th class="center">Mon3</th>
+                                            <th class="center">Cc3</th>
+                                            <th class="center">Ref Int3</th>
+                                            <th class="center">Estado Doc</th>
+                                            <th class="center">Estado</th>
+                                            <th class="center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="center">{{ $data['correntistaData']['dni'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['correntistaData']['nombre'] ?? '-' }}</td>
+                                            <td class="center">{{ $libros->where('N', $data['libro'])->first()->DESCRIPCION ?? $data['libro'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['fecha_doc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['fecha_ven'] ?? '-' }}</td>
+                                            <td class="center">{{ $ComprobantesPago->where('N', $data['tdoc'])->first()->DESCRIPCION ?? $data['tdoc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['ser'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['num'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cod_moneda'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['tip_cam'] ?? '-' }}</td>
+                                            <td class="center">{{ $opigvs->where('Id', $data['opigv'])->first()->Descripcion ?? $data['opigv'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['bas_imp'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['igv'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['no_gravadas'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['isc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['imp_bol_pla'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['otro_tributo'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['precio'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['glosa'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cnta1']['cuenta'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['mon1'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cc1'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['ref_int1'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['mon2'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cc2'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['ref_int2'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['mon3'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cc3'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['ref_int3'] ?? '-' }}</td>
+                                            <td class="center">{{ $estado_docs->where('id', $data['estado_doc'])->first()->descripcion ?? $data['estado_doc'] ?? '-' }}</td>
+                                            <td class="center">{{ $estados->where('N', $data['estado'])->first()->DESCRIPCION ?? $data['estado'] ?? '-' }}</td>
                                             <td class="center">
                                                 <!-- Add your action buttons here -->
                                                 <a href="#" class="btn btn-tbl-edit">
@@ -108,143 +113,19 @@
                                                 </a>
                                             </td>
                                         </tr>
-                    
-                                        <!-- Additional rows for cnta1_destinos -->
-                                        @if (isset($data['cnta1_destinos']) && is_array($data['cnta1_destinos']))
-                                            @foreach ($data['cnta1_destinos'] as $destino)
-                                                <tr>
-                                                    <!-- Valores del correntista -->
-                                                    @if (isset($data['correntistaData']))
-                                                        @foreach ($data['correntistaData'] as $key => $value)
-                                                            <td class="center">{{ $value }}</td>
-                                                        @endforeach
-                                                    @endif
-                    
-                                                    <!-- Valores de datos -->
-                                                    @foreach ($data as $key => $value)
-                                                        @if (!is_array($value) && $key !== 'cuenta_igv' && $key !== 'cnta1_destinos' && $key !== 'correntistaData')
-                                                            @if ($key === 'glosa')
-                                                                <td class="center">{{ $value }}</td>
-                                                                <td class="center">{{ $destino['cuenta'] }}</td>
-                                                            @else
-                                                                <td class="center">
-                                                                    @if ($key == 'libro')
-                                                                        {{ $libros->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                                    @elseif ($key == 'opigv')
-                                                                        {{ $opigvs->where('Id', $value)->first()->Descripcion ?? $value }}
-                                                                    @elseif ($key == 'estado_doc')
-                                                                        {{ $estado_docs->where('id', $value)->first()->descripcion ?? $value }}
-                                                                    @elseif ($key == 'estado')
-                                                                        {{ $estados->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                                    @elseif ($key == 'mon1')
-                                                                        {{ $destino['monto'] }}
-                                                                    @elseif ($key == 'cc1')
-                                                                        {{ $destino['cc'] }}
-                                                                    @elseif ($key == 'ref_int1')
-                                                                        {{ $destino['ref'] }}
-                                                                    @else
-                                                                        {{ is_array($value) ? '' : $value }}
-                                                                    @endif
-                                                                </td>
-                                                                @if ($key === 'mon1')
-                                                                    <td class="center">{{ $destino['DebeHaber'] }}</td>
-                                                                @endif
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-                                                    <td class="center"></td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                    
-                                        <!-- New row for cuentaigv -->
-                                        @if ($data['libro'] == '01')
-                                            <tr>
-                                                <!-- Valores del correntista -->
-                                                @if (isset($data['correntistaData']))
-                                                    @foreach ($data['correntistaData'] as $key => $value)
-                                                        <td class="center">{{ $value }}</td>
-                                                    @endforeach
-                                                @endif
-                    
-                                                <!-- Valores de datos -->
-                                                @foreach ($data as $key => $value)
-                                                    @if (!is_array($value) && $key !== 'cuenta_igv' && $key !== 'cnta1_destinos' && $key !== 'correntistaData')
-                                                        @if ($key === 'glosa')
-                                                            <td class="center">{{ $value }}</td>
-                                                            <td class="center">{{ $data['cuenta_igv'] }}</td>
-                                                        @else
-                                                            <td class="center">
-                                                                @if ($key == 'libro')
-                                                                    {{ $libros->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                                @elseif ($key == 'opigv')
-                                                                    {{ $opigvs->where('Id', $value)->first()->Descripcion ?? $value }}
-                                                                @elseif ($key == 'estado_doc')
-                                                                    {{ $estado_docs->where('id', $value)->first()->descripcion ?? $value }}
-                                                                @elseif ($key == 'estado')
-                                                                    {{ $estados->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                                @elseif ($key == 'mon1')
-                                                                    {{ $data['igv'] }}
-                                                                @else
-                                                                    {{ is_array($value) ? '' : $value }}
-                                                                @endif
-                                                            </td>
-                                                            @if ($key === 'mon1')
-                                                                <td class="center">1</td> <!-- DebeHaber para cuentaigv -->
-                                                            @endif
-                                                        @endif
-                                                    @endif
-                                                @endforeach
-                                                <td class="center"></td>
-                                            </tr>
-                                        @endif
-                    
-                                        <!-- New row for cnta_precio -->
-                                        @if (!empty($data['cnta_precio']))
-                                            <tr>
-                                                <!-- Valores del correntista -->
-                                                @if (isset($data['correntistaData']))
-                                                    @foreach ($data['correntistaData'] as $key => $value)
-                                                        <td class="center">{{ $value }}</td>
-                                                    @endforeach
-                                                @endif
-                    
-                                                <!-- Valores de datos -->
-                                                @foreach ($data as $key => $value)
-                                                    @if (!is_array($value) && $key !== 'cuenta_igv' && $key !== 'cnta1_destinos' && $key !== 'correntistaData')
-                                                        @if ($key === 'glosa')
-                                                            <td class="center">{{ $value }}</td>
-                                                            <td class="center">{{ $data['cnta_precio'] }}</td>
-                                                        @else
-                                                            <td class="center">
-                                                                @if ($key == 'libro')
-                                                                    {{ $libros->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                                @elseif ($key == 'opigv')
-                                                                    {{ $opigvs->where('Id', $value)->first()->Descripcion ?? $value }}
-                                                                @elseif ($key == 'estado_doc')
-                                                                    {{ $estado_docs->where('id', $value)->first()->descripcion ?? $value }}
-                                                                @elseif ($key == 'estado')
-                                                                    {{ $estados->where('N', $value)->first()->DESCRIPCION ?? $value }}
-                                                                @elseif ($key == 'mon1')
-                                                                    {{ $data['cnta_precio'] }}
-                                                                @else
-                                                                    {{ is_array($value) ? '' : $value }}
-                                                                @endif
-                                                            </td>
-                                                            @if ($key === 'mon1')
-                                                                <td class="center">1</td> <!-- DebeHaber para cnta_precio -->
-                                                            @endif
-                                                        @endif
-                                                    @endif
-                                                @endforeach
-                                                <td class="center"></td>
-                                            </tr>
-                                        @endif
-                                    @endif
-                                </tbody>
+                                    </tbody>
+                                @else
+                                    
+                                    <tbody>
+                                        <tr>
+                                            <td class="center" colspan="37">¡Mostraremos aquí la info!</td>
+                                        </tr>
+                                    </tbody>
+                                @endif
                             </table>
                         </div>
                     </div>
+                    
                     
                 </div>
             </div>

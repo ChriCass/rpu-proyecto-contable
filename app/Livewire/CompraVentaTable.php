@@ -10,12 +10,13 @@ use App\Models\Empresa;
 use App\Models\Libro;
 use App\Models\OpIgv;
 use App\Models\EstadoDocumento;
+use App\Models\TipoComprobantePagoDocumento;
 use App\Models\Estado;
 class CompraVentaTable extends Component
 {   public $data = [];
     public $empresa;
     public $rows = [];
-    public $libros, $opigvs, $estado_docs, $estados;
+    public $libros, $opigvs, $estado_docs, $estados, $ComprobantesPago;
     #[On('dataSubmitted')]
     public function handleDataSubmitted($data)
     {
@@ -30,6 +31,7 @@ class CompraVentaTable extends Component
          $this->opigvs = Opigv::all();
          $this->estado_docs = EstadoDocumento::all();
          $this->estados = Estado::all();
+         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
     }
 
     public function NoMoreRow()
@@ -42,7 +44,9 @@ class CompraVentaTable extends Component
         return view('livewire.compra-venta.compra-venta-table', ['data'=>$this->data, 'libros' => $this->libros,
             'opigvs' => $this->opigvs,
             'estado_docs' => $this->estado_docs,
-            'estados' => $this->estados] );
+            'estados' => $this->estados,
+            'ComprobantesPago'=> $this->ComprobantesPago
+            ] );
         
     }
 }

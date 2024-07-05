@@ -37,7 +37,7 @@ class CompraVentaForm extends Component
             return $estado;
         });
         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
-    
+        
     }
 
     #[On('correntistaEncontrado')]
@@ -104,18 +104,44 @@ class CompraVentaForm extends Component
             'fecha_doc' => 'required|date',
             'fecha_ven' => 'required|date',
             'num' => 'required',
-            'tdoc'=>'required',
+            'tdoc' => 'required',
             'cod_moneda' => 'required|in:PEN,USD',
             'opigv' => 'required',
             'bas_imp' => 'required',
             'igv' => 'required',
-            'cnta_precio' =>'required',
+            'cnta_precio' => 'required',
             'glosa' => 'required',
             'cnta1.cuenta' => 'required',
             'mon1' => 'required',
             'estado_doc' => 'required',
-            'estado' => 'required|integer' 
+            'estado' => 'required|integer',
+            'ser' => 'nullable',
+            'tip_cam' => 'nullable',
+            'no_gravadas' => 'nullable',
+            'isc' => 'nullable',
+            'imp_bol_pla' => 'nullable',
+            'otro_tributo' => 'nullable',
+            'precio' => 'nullable',
+            'mon2' => 'nullable',
+            'mon3' => 'nullable',
+            'cc1' => 'nullable',
+            'cc2' => 'nullable',
+            'cc3' => 'nullable',
+            'cta_otro_t' => 'nullable',
+            'fecha_emod' => 'nullable',
+            'tdoc_emod' => 'nullable',
+            'ser_emod' => 'nullable',
+            'num_emod' => 'nullable',
+            'fec_emi_detr' => 'nullable',
+            'num_const_der' => 'nullable',
+            'tiene_detracc' => 'nullable',
+            'cta_detracc' => 'nullable',
+            'mont_detracc' => 'nullable',
+            'ref_int1' => 'nullable',
+            'ref_int2' => 'nullable',
+            'ref_int3' => 'nullable'
         ]);
+        
 
         // Verificar el valor del estado antes de procesar
     Log::info('Estado validado: ', ['estado' => $this->estado]);
