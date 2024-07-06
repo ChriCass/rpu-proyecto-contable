@@ -12,7 +12,8 @@ use App\Models\TipoComprobantePagoDocumento;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 class CompraVentaForm extends Component
-{
+{   
+    public $empresaId;
     public $libro, $fecha_doc, $fecha_ven, $tdoc, $ser, $num, $cod_moneda;
     public $tip_cam, $opigv, $bas_imp, $igv, $no_gravadas, $isc, $imp_bol_pla, $otro_tributo;
     public $precio, $glosa, $cnta_precio, $mon1, $mon2, $mon3;
@@ -172,6 +173,11 @@ class CompraVentaForm extends Component
                 'email' => Auth::user()->email,
             ];
      
+        }
+
+        if(!empty($this->empresaId))
+        {
+            $data['empresa'] = $this->empresaId;
         }
 
  

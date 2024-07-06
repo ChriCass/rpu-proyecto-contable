@@ -36,6 +36,7 @@
                                 @if (!empty($data))
                                     <thead>
                                         <tr>
+                                            <th class="center">Empresa</th>
                                             <th class="center">Libro</th>
                                             <th class="center">Fecha Doc</th>
                                             <th class="center">Fecha Ven</th>
@@ -86,6 +87,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td class="center">{{ $data['empresa'] ?? '-' }}</td>
                                             <td class="center">{{ $libros->where('N', $data['libro'])->first()->DESCRIPCION ?? '-' }}</td>
                                             <td class="center">{{ $data['fecha_doc'] ?? '-' }}</td>
                                             <td class="center">{{ $data['fecha_ven'] ?? '-' }}</td>

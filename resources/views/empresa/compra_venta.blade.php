@@ -46,7 +46,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <livewire:compra-venta-form />
+                        <livewire:compra-venta-form :empresaId="$empresa->id" />
+
                     </div>
                 </div>
             </div>
