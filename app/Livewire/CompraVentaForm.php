@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Livewire;
-
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\Libro;
 use App\Models\PlanContable;
@@ -22,7 +22,7 @@ class CompraVentaForm extends Component
 
     public $libros, $opigvs, $estado_docs, $estados, $ComprobantesPago;
     public $correntistaData;
-
+    public $usuario = [];
     public $cnta1 = ['cuenta'=>'', 'DebeHaber'=> null];
     public $cnta2 = ['cuenta'=>'', 'DebeHaber'=> null];
     public $cnta3 = ['cuenta'=>'', 'DebeHaber'=> null];
@@ -37,6 +37,7 @@ class CompraVentaForm extends Component
             return $estado;
         });
         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
+        $this->usuario = Auth::user();
         
     }
 
@@ -100,6 +101,7 @@ class CompraVentaForm extends Component
     {
         // Emitir el evento 'dataSubmitted' con los datos del formulario
         $validatedData = $this->validate([
+            'correntistaData' => 'required',
             'libro' => 'required',
             'fecha_doc' => 'required|date',
             'fecha_ven' => 'required|date',
@@ -163,7 +165,17 @@ class CompraVentaForm extends Component
             $data['cuenta_igv'] = 1673;
         }
 
-    
+
+        if (Auth::check()) {
+            $data['usuario'] = [
+                'id' => Auth::user()->id,
+                'email' => Auth::user()->email,
+            ];
+     
+        }
+
+ 
+
         // Agregar datos del correntista
         if (!empty($this->correntistaData)) {
             $data['correntistaData'] = $this->correntistaData;

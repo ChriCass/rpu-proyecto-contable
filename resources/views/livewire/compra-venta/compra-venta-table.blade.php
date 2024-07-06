@@ -81,6 +81,7 @@
                                             <th class="center">Estado Doc</th>
                                             <th class="center">Estado</th>
                                             <th class="center">Action</th>
+                                            <th class="center">Usuario</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -137,6 +138,7 @@
                                                     <i class="material-icons">delete_forever</i>
                                                 </a>
                                             </td>
+                                            <td class="center">{{$data['usuario']['id']}}</td>
                                         </tr>
                                     </tbody>
                                 @else
