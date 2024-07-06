@@ -36,11 +36,11 @@
                                 @if (!empty($data))
                                     <thead>
                                         <tr>
-                                            <th class="center">DNI</th>
-                                            <th class="center">Nombre</th>
                                             <th class="center">Libro</th>
                                             <th class="center">Fecha Doc</th>
                                             <th class="center">Fecha Ven</th>
+                                            <th class="center">Correntista</th>
+                                            <th class="center">{{ isset($data['correntistaData']['nombre_o_razon_social']) ? 'Razon Social' : 'Nombre' }}</th> 
                                             <th class="center">Tdoc</th>
                                             <th class="center">Ser</th>
                                             <th class="center">Num</th>
@@ -55,15 +55,28 @@
                                             <th class="center">Otro Tributo</th>
                                             <th class="center">Precio</th>
                                             <th class="center">Glosa</th>
-                                            <th class="center">Cuentas</th>
+                                            <th class="center">Cuenta 1</th>
+                                            <th class="center">Cuenta 2</th>
+                                            <th class="center">Cuenta 3</th>
+                                            <th class="center">Cuenta precio</th>
                                             <th class="center">Mon1</th>
-                                            <th class="center">Cc1</th>
-                                            <th class="center">Ref Int1</th>
                                             <th class="center">Mon2</th>
-                                            <th class="center">Cc2</th>
-                                            <th class="center">Ref Int2</th>
                                             <th class="center">Mon3</th>
+                                            <th class="center">Cc1</th>
+                                            <th class="center">Cc2</th>
                                             <th class="center">Cc3</th>
+                                            <th class="center">Cuenta otro tributo</th>
+                                            <th class="center">Fecha de modificacion</th>
+                                            <th class="center">Tipo de documento modificado</th>
+                                            <th class="center">Serie modificada</th>
+                                            <th class="center">numero Moduficado</th>
+                                            <th class="center">fecha de emision de detración</th>
+                                            <th class="center">Numero constancia de detraccion</th>
+                                            <th class="center">tiene detraccion?</th>
+                                            <th class="center">Cuenta detracción</th>
+                                            <th class="center">Monto detraccion</th>
+                                            <th class="center">Ref Int1</th>
+                                            <th class="center">Ref Int2</th>                    
                                             <th class="center">Ref Int3</th>
                                             <th class="center">Estado Doc</th>
                                             <th class="center">Estado</th>
@@ -72,17 +85,17 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="center">{{ $data['correntistaData']['dni'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['correntistaData']['nombre'] ?? '-' }}</td>
-                                            <td class="center">{{ $libros->where('N', $data['libro'])->first()->DESCRIPCION ?? $data['libro'] ?? '-' }}</td>
+                                            <td class="center">{{ $libros->where('N', $data['libro'])->first()->DESCRIPCION ?? '-' }}</td>
                                             <td class="center">{{ $data['fecha_doc'] ?? '-' }}</td>
                                             <td class="center">{{ $data['fecha_ven'] ?? '-' }}</td>
-                                            <td class="center">{{ $ComprobantesPago->where('N', $data['tdoc'])->first()->DESCRIPCION ?? $data['tdoc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['correntistaData']['dni'] ?? $data['correntistaData']['ruc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['correntistaData']['nombre'] ?? $data['correntistaData']['nombre_o_razon_social'] ?? '-' }}</td>
+                                            <td class="center">{{ $ComprobantesPago->where('N', $data['tdoc'])->first()->DESCRIPCION ?? '-' }}</td>
                                             <td class="center">{{ $data['ser'] ?? '-' }}</td>
                                             <td class="center">{{ $data['num'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cod_moneda'] ?? '-' }}</td>
                                             <td class="center">{{ $data['tip_cam'] ?? '-' }}</td>
-                                            <td class="center">{{ $opigvs->where('Id', $data['opigv'])->first()->Descripcion ?? $data['opigv'] ?? '-' }}</td>
+                                            <td class="center">{{ $opigvs->where('Id', $data['opigv'])->first()->Descripcion ?? '-' }}</td>
                                             <td class="center">{{ $data['bas_imp'] ?? '-' }}</td>
                                             <td class="center">{{ $data['igv'] ?? '-' }}</td>
                                             <td class="center">{{ $data['no_gravadas'] ?? '-' }}</td>
@@ -92,19 +105,31 @@
                                             <td class="center">{{ $data['precio'] ?? '-' }}</td>
                                             <td class="center">{{ $data['glosa'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta1']['cuenta'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cnta2']['cuenta'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cnta3']['cuenta'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cnta_precio'] ?? '-' }}</td>
                                             <td class="center">{{ $data['mon1'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cc1'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['ref_int1'] ?? '-' }}</td>
                                             <td class="center">{{ $data['mon2'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cc2'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['ref_int2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['mon3'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cc1'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cc2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc3'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cta_otro_t'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['fecha_emod'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['tdoc_emod'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['ser_emod'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['num_emod'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['fec_emi_detr'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['num_const_der'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['tiene_detracc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cta_detracc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['mont_detracc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['ref_int1'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['ref_int2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['ref_int3'] ?? '-' }}</td>
-                                            <td class="center">{{ $estado_docs->where('id', $data['estado_doc'])->first()->descripcion ?? $data['estado_doc'] ?? '-' }}</td>
-                                            <td class="center">{{ $estados->where('N', $data['estado'])->first()->DESCRIPCION ?? $data['estado'] ?? '-' }}</td>
+                                            <td class="center">{{ $estado_docs->where('id', $data['estado_doc'])->first()->descripcion ?? '-' }}</td>
+                                            <td class="center">{{ $estados->where('N', $data['estado'])->first()->DESCRIPCION ?? '-' }}</td>
                                             <td class="center">
-                                                <!-- Add your action buttons here -->
                                                 <a href="#" class="btn btn-tbl-edit">
                                                     <i class="material-icons">create</i>
                                                 </a>
