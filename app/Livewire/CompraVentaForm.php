@@ -33,7 +33,7 @@ class CompraVentaForm extends Component
     public $cnta_precio = ['cuenta' => '', 'DebeHaber' => null];
     public $cta_detracc = ['cuenta' => '', 'DebeHaber' => null];
     public $porcentaje;
-
+    public $montoSoles = [];
 
     public function mount()
     {
@@ -60,36 +60,69 @@ class CompraVentaForm extends Component
     public function handleTipoCambioEncontrado($data)
     {
         Log::info('El tipo de cambio encontrado es: ', $data);
-        $this->tip_cam = is_numeric($data['precio_compra']) ? round((float)$data['precio_compra'], 2) : 0.00;
+        $this->tip_cam = is_numeric($data['precio_venta']) ? round((float)$data['precio_venta'], 2) : 0.00;
     }
 
 
 
     public function updated()
-    {   $this->mon1 = $this->bas_imp;
+    {   
+        Log::info('Updated method called. Current values:', [
+            'bas_imp' => $this->bas_imp,
+            'porcentaje' => $this->porcentaje
+        ]);
+    
+        $this->mon1 = $this->bas_imp;
         $this->calcularIgv();
         $this->calcularPrecio();
     }
 
     public function calcularIgv()
     {
-        
+        Log::info('Calculating IGV. Current values:', [
+            'bas_imp' => $this->bas_imp,
+            'porcentaje' => $this->porcentaje
+        ]);
+    
         $this->igv = round(($this->bas_imp * $this->porcentaje) / 100, 2);
-             
-        
+        Log::info('IGV calculated:', ['igv' => $this->igv]);
     }
 
     public function calcularPrecio()
     {
-        $this->precio = round(($this->bas_imp ?: 0) + ($this->igv ?: 0) + ($this->isc ?: 0) + ($this->imp_bol_pla ?: 0) + ($this->otro_tributo ?: 0), 2);
-   
+        Log::info('Calculating Price. Current values:', [
+            'bas_imp' => $this->bas_imp,
+            'igv' => $this->igv,
+            'isc' => $this->isc,
+            'imp_bol_pla' => $this->imp_bol_pla,
+            'otro_tributo' => $this->otro_tributo
+        ]);
+    
+        $this->precio = round(
+            ($this->bas_imp ?? 0) + 
+            ($this->igv ?? 0) + 
+            ($this->isc ?? 0) + 
+            ($this->imp_bol_pla ?? 0) + 
+            ($this->otro_tributo ?? 0), 
+            2
+        );
+    
+        Log::info('Price calculated:', ['precio' => $this->precio]);
     }
-
-
 
     private function calcularMontos(&$data)
     {
-        // Realizar cálculos según la moneda
+        Log::info('Calculating amounts based on currency. Current values:', [
+            'cod_moneda' => $this->cod_moneda,
+            'tip_cam' => $this->tip_cam,
+            'mon1' => $this->mon1,
+            'mon2' => $this->mon2,
+            'mon3' => $this->mon3,
+            'igv' => $this->igv,
+            'otro_tributo' => $this->otro_tributo,
+            'bas_imp' => $this->bas_imp
+        ]);
+    
         if ($this->cod_moneda == 'USD') {
             $data['mon1'] = round($this->mon1 * $this->tip_cam, 2);
             $data['mon2'] = round($this->mon2 * $this->tip_cam, 2);
@@ -97,9 +130,17 @@ class CompraVentaForm extends Component
             $data['igv'] = round($this->igv * $this->tip_cam, 2);
             $data['otro_tributo'] = round($this->otro_tributo * $this->tip_cam, 2);
             $data['bas_imp'] = round($this->bas_imp * $this->tip_cam, 2);
+    
+            Log::info('Amounts after conversion:', [
+                'mon1' => $data['mon1'],
+                'mon2' => $data['mon2'],
+                'mon3' => $data['mon3'],
+                'igv' => $data['igv'],
+                'otro_tributo' => $data['otro_tributo'],
+                'bas_imp' => $data['bas_imp']
+            ]);
         }
     }
-
     private function agregarDestinos($cuenta, $monto, $cc, $ref)
     {
         // Realizar consulta para obtener destinos

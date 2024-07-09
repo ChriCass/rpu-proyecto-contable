@@ -28,6 +28,7 @@ class CambioSunat extends Component
                 'precio_venta' => $existingTipoCambio->TipCamVenta,
             ];
             Log::info("Tipo de cambio del día de hoy obtenido de la base de datos", $this->tipoCambio);
+            $this->dispatch('tipoCambioEncontrado', $this->tipoCambio);
         } else {
             try {
                 Log::info("Consultando el último tipo de cambio de SUNAT");
@@ -77,9 +78,11 @@ class CambioSunat extends Component
                 'precio_venta' => $lastTipoCambio->TipCamVenta,
             ];
             Log::info("Último tipo de cambio obtenido de la base de datos", $this->tipoCambio);
+            $this->dispatch('tipoCambioEncontrado', $this->tipoCambio);
         } else {
             $this->errorMessage = 'No hay datos disponibles en la base de datos.';
             Log::error("No se encontraron datos en la base de datos.");
+            $this->dispatch('tipoCambioEncontrado', $this->tipoCambio);
         }
     }
 
