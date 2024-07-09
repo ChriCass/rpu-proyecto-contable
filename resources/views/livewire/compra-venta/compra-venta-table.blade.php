@@ -110,14 +110,14 @@
                                             <td class="center">{{ $data['cnta1']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta2']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta3']['cuenta'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cnta_precio'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cnta_precio']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['mon1'] ?? '-' }}</td>
                                             <td class="center">{{ $data['mon2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['mon3'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc1'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc3'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cta_otro_t'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cta_otro_t']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['fecha_emod'] ?? '-' }}</td>
                                             <td class="center">{{ $data['tdoc_emod'] ?? '-' }}</td>
                                             <td class="center">{{ $data['ser_emod'] ?? '-' }}</td>
@@ -125,7 +125,7 @@
                                             <td class="center">{{ $data['fec_emi_detr'] ?? '-' }}</td>
                                             <td class="center">{{ $data['num_const_der'] ?? '-' }}</td>
                                             <td class="center">{{ $data['tiene_detracc'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cta_detracc'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cta_detracc']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['mont_detracc'] ?? '-' }}</td>
                                             <td class="center">{{ $data['ref_int1'] ?? '-' }}</td>
                                             <td class="center">{{ $data['ref_int2'] ?? '-' }}</td>

@@ -54,7 +54,10 @@
                 </div>
             </div>
             <div class="col-md-3">
-                
+                <div class="form-group mb-3">
+                    <label class="fw-bold" for="ser">Serie</label>
+                    <input type="text" class="form-control" id="ser" wire:model="ser">
+                </div>
             </div>
         </div>
         
@@ -70,12 +73,7 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group mb-3">
-                    <label class="fw-bold" for="ser">Serie</label>
-                    <input type="text" class="form-control" id="ser" wire:model="ser">
-                </div>
+
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
@@ -95,37 +93,52 @@
                     @error('cod_moneda') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+            <div class="col-md-3">
+                <livewire:cambio-sunat />
+            </div>
             
         </div>
     
         <!-- Tercera fila de inputs -->
         <div class="row">
             <div class="col-md-3">
-                <livewire:cambio-sunat />
-            </div>
-            <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="opigv">Tipo de Operación IGV</label>
                     <select class="form-control" id="opigv" wire:model="opigv" required>
                         <option value="">Seleccionar tipo op IGV</option>
                         @foreach ($opigvs as $o)
-                            <option value="{{ $o->Id }}">{{ $o->Descripcion }}</option>
+                            @if ($o->Id != 4)
+                                <option value="{{ $o->Id }}">{{ $o->Descripcion }}</option>
+                            @endif
                         @endforeach
                     </select>
                     @error('opigv') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+
+            <div class="col-md-3">
+                <div class="form-group mb-3">
+                    <label for="bas_imp_percentage">Porcentaje Base Imponible</label>
+                    <select class="form-control" id="bas_imp_percentage" required wire:model.live="porcentaje">
+                        <option value="">Seleccionar porcentaje</option>
+                        <option value="10">10%</option>
+                        <option value="18">18%</option>
+                    </select>
+                    @error('porcentaje') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+
+            </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="bas_imp">Base Imponible</label>
-                    <input type="text" class="form-control" id="bas_imp" wire:model="bas_imp" required>
+                    <input type="text" class="form-control"  id="bas_imp" wire:model.live="bas_imp" required >
                     @error('bas_imp') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="igv">IGV</label>
-                    <input type="text" class="form-control" id="igv" wire:model="igv" required>
+                    <input type="text" class="form-control" id="igv" wire:model.live="igv" required  >
                     @error('igv') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -142,19 +155,19 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="isc">ISC</label>
-                    <input type="text" class="form-control" id="isc" wire:model="isc">
+                    <input type="text"   class="form-control" id="isc" wire:model.live="isc">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="imp_bol_pla">Importe Bol. Pla.</label>
-                    <input type="text" class="form-control" id="imp_bol_pla" wire:model="imp_bol_pla">
+                    <input type="text"   class="form-control" id="imp_bol_pla" wire:model.live="imp_bol_pla">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="otro_tributo">Otro Tributo</label>
-                    <input type="text" class="form-control" id="otro_tributo" wire:model="otro_tributo">
+                    <input type="text"   class="form-control" id="otro_tributo" wire:model.live="otro_tributo">
                 </div>
             </div>
         </div>
@@ -164,7 +177,7 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="precio">Precio</label>
-                    <input type="text" class="form-control" id="precio" wire:model="precio">
+                    <input type="text" class="form-control" readonly  id="precio"  value="{{$precio}}" >
                 </div>
             </div>
             <div class="col-md-3">
@@ -197,13 +210,13 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cnta_precio">Cuenta Precio</label>
-                    <input type="text" class="form-control" id="cnta_precio" wire:model="cnta_precio">
+                    <input type="text" class="form-control" id="cnta_precio" wire:model="cnta_precio.cuenta">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="mon1">Moneda 1</label>
-                    <input type="text" class="form-control" id="mon1" wire:model="mon1" required>
+                    <input type="text" class="form-control" id="mon1" wire:model.live="mon1" required>
                     @error('mon1') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -248,7 +261,7 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cta_otro_t">Cuenta Otro Tributo</label>
-                    <input type="text" class="form-control" id="cta_otro_t" wire:model="cta_otro_t">
+                    <input type="text" class="form-control" id="cta_otro_t" wire:model="cta_otro_t.cuenta">
                 </div>
             </div>
             <div class="col-md-3">
@@ -293,10 +306,16 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
-                    <label for="tiene_detracc">Tiene Detracción</label>
-                    <input type="text" class="form-control" id="tiene_detracc" wire:model="tiene_detracc">
+                    <label for="tiene_detracc">Tiene Detracción?</label>
+                    <select class="form-control" id="tiene_detracc" wire:model="tiene_detracc">
+                        <option value="">Seleccionar</option>
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                    @error('tiene_detracc') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+            
         </div>
     
         <!-- Décima fila de inputs -->
@@ -304,7 +323,7 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cta_detracc">Cuenta de Detracción</label>
-                    <input type="text" class="form-control" id="cta_detracc" wire:model="cta_detracc">
+                    <input type="text" class="form-control" id="cta_detracc" wire:model="cta_detracc.cuenta">
                 </div>
             </div>
             <div class="col-md-3">
@@ -374,28 +393,4 @@
 </div>
 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const input = document.getElementById('customSelectInput');
-        const menu = document.getElementById('customSelectMenu');
-        const items = menu.getElementsByClassName('dropdown-item');
-
-        input.addEventListener('keyup', function () {
-            const filter = input.value.toLowerCase();
-            for (let i = 0; i < items.length; i++) {
-                const text = items[i].textContent || items[i].innerText;
-                items[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-            }
-        });
-
-        for (let i = 0; i < items.length; i++) {
-            items[i].addEventListener('click', function (e) {
-                e.preventDefault();
-                input.value = this.textContent;
-                input.setAttribute('data-value', this.getAttribute('data-value'));
-                input.dispatchEvent(new Event('change'));  // Opcional: para manejar cambios adicionales
-            });
-        }
-    });
-
-</script>
+ 

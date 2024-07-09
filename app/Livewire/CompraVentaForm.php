@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\Libro;
@@ -11,35 +12,41 @@ use App\Models\Estado;
 use App\Models\TipoComprobantePagoDocumento;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
+
 class CompraVentaForm extends Component
-{   
+{
     public $empresaId;
     public $libro, $fecha_doc, $fecha_ven, $tdoc, $ser, $num, $cod_moneda;
     public $tip_cam, $opigv, $bas_imp, $igv, $no_gravadas, $isc, $imp_bol_pla, $otro_tributo;
-    public $precio, $glosa, $cnta_precio, $mon1, $mon2, $mon3;
-    public $cc1, $cc2, $cc3, $cta_otro_t, $fecha_emod, $tdoc_emod, $ser_emod, $num_emod;
-    public $fec_emi_detr, $num_const_der, $tiene_detracc, $cta_detracc, $mont_detracc;
+    public $precio, $glosa, $mon1, $mon2, $mon3;
+    public $cc1, $cc2, $cc3, $fecha_emod, $tdoc_emod, $ser_emod, $num_emod;
+    public $fec_emi_detr, $num_const_der, $tiene_detracc, $mont_detracc;
     public $ref_int1, $ref_int2, $ref_int3, $estado_doc, $estado;
 
     public $libros, $opigvs, $estado_docs, $estados, $ComprobantesPago;
     public $correntistaData;
     public $usuario = [];
-    public $cnta1 = ['cuenta'=>'', 'DebeHaber'=> null];
-    public $cnta2 = ['cuenta'=>'', 'DebeHaber'=> null];
-    public $cnta3 = ['cuenta'=>'', 'DebeHaber'=> null];
+    public $cnta1 = ['cuenta' => '', 'DebeHaber' => null];
+    public $cnta2 = ['cuenta' => '', 'DebeHaber' => null];
+    public $cnta3 = ['cuenta' => '', 'DebeHaber' => null];
+    public $cta_otro_t = ['cuenta' => '', 'DebeHaber' => null];
+    public $cnta_precio = ['cuenta' => '', 'DebeHaber' => null];
+    public $cta_detracc = ['cuenta' => '', 'DebeHaber' => null];
+    public $porcentaje;
+
+
     public function mount()
     {
         $this->libros = Libro::all();
         $this->opigvs = Opigv::all();
         $this->estado_docs = EstadoDocumento::all();
-        $this->estados = Estado::all()->map(function($estado) {
+        $this->estados = Estado::all()->map(function ($estado) {
             // Verificar que los estados se obtienen correctamente
             Log::info('Estado cargado: ', ['N' => $estado->N, 'Descripcion' => $estado->DESCRIPCION]);
             return $estado;
         });
         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
         $this->usuario = Auth::user();
-        
     }
 
     #[On('correntistaEncontrado')]
@@ -55,7 +62,31 @@ class CompraVentaForm extends Component
         Log::info('El tipo de cambio encontrado es: ', $data);
         $this->tip_cam = is_numeric($data['precio_compra']) ? round((float)$data['precio_compra'], 2) : 0.00;
     }
-    
+
+
+
+    public function updated()
+    {   $this->mon1 = $this->bas_imp;
+        $this->calcularIgv();
+        $this->calcularPrecio();
+    }
+
+    public function calcularIgv()
+    {
+        
+        $this->igv = round(($this->bas_imp * $this->porcentaje) / 100, 2);
+             
+        
+    }
+
+    public function calcularPrecio()
+    {
+        $this->precio = round(($this->bas_imp ?: 0) + ($this->igv ?: 0) + ($this->isc ?: 0) + ($this->imp_bol_pla ?: 0) + ($this->otro_tributo ?: 0), 2);
+   
+    }
+
+
+
     private function calcularMontos(&$data)
     {
         // Realizar cálculos según la moneda
@@ -73,11 +104,11 @@ class CompraVentaForm extends Component
     {
         // Realizar consulta para obtener destinos
         $destinos = PlanContable::select('Dest1D', 'Dest1H', 'Dest2D', 'Dest2H')
-                                ->where('CtaCtable', $cuenta)
-                                ->first();
-    
+            ->where('CtaCtable', $cuenta)
+            ->first();
+
         Log::info('Consulta de destinos para la cuenta: ' . $cuenta, ['destinos' => $destinos]);
-    
+
         $resultados = [];
         if ($destinos) {
             $destinosArray = $destinos->toArray();
@@ -96,7 +127,7 @@ class CompraVentaForm extends Component
         }
         return $resultados;
     }
-    
+
 
     public function submit()
     {
@@ -112,7 +143,7 @@ class CompraVentaForm extends Component
             'opigv' => 'required',
             'bas_imp' => 'required',
             'igv' => 'required',
-            'cnta_precio' => 'required',
+            'cnta_precio.cuenta' => 'required',
             'glosa' => 'required',
             'cnta1.cuenta' => 'required',
             'mon1' => 'required',
@@ -124,13 +155,13 @@ class CompraVentaForm extends Component
             'isc' => 'nullable',
             'imp_bol_pla' => 'nullable',
             'otro_tributo' => 'nullable',
-            'precio' => 'nullable',
+            'precio' => 'required',
             'mon2' => 'nullable',
             'mon3' => 'nullable',
             'cc1' => 'nullable',
             'cc2' => 'nullable',
             'cc3' => 'nullable',
-            'cta_otro_t' => 'nullable',
+            'cta_otro_t.cuenta' => 'nullable',
             'fecha_emod' => 'nullable',
             'tdoc_emod' => 'nullable',
             'ser_emod' => 'nullable',
@@ -138,20 +169,20 @@ class CompraVentaForm extends Component
             'fec_emi_detr' => 'nullable',
             'num_const_der' => 'nullable',
             'tiene_detracc' => 'nullable',
-            'cta_detracc' => 'nullable',
+            'cta_detracc.cuenta' => 'nullable',
             'mont_detracc' => 'nullable',
             'ref_int1' => 'nullable',
             'ref_int2' => 'nullable',
             'ref_int3' => 'nullable'
         ]);
-        
+
 
         // Verificar el valor del estado antes de procesar
-    Log::info('Estado validado: ', ['estado' => $this->estado]);
+        Log::info('Estado validado: ', ['estado' => $this->estado]);
 
-        
+
         Log::info('Data submitted: ', $validatedData);
-        
+
 
         // Preparar $data solo con los campos que tienen valores
         $data = [];
@@ -161,8 +192,7 @@ class CompraVentaForm extends Component
             }
         }
 
-        if($this->libro == '01')
-        {
+        if ($this->libro == '01') {
             $data['cuenta_igv'] = 1673;
         }
 
@@ -172,25 +202,36 @@ class CompraVentaForm extends Component
                 'id' => Auth::user()->id,
                 'email' => Auth::user()->email,
             ];
-     
         }
 
-        if(!empty($this->empresaId))
-        {
+        if (!empty($this->empresaId)) {
             $data['empresa'] = $this->empresaId;
         }
 
- 
+
+        if (!empty($this->otro_tributo)) {
+            $this->cta_otro_t['DebeHaber'] = 1;
+        }
+
+        if (empty($this->tiene_detracc) || $this->tiene_detracc === 'no') {
+            $this->cnta_precio['DebeHaber'] = 2;
+        }
+
+
+        if (!empty($this->mont_detracc)) {
+            $this->cta_detracc['DebeHaber'] = 2;
+        }
+
 
         // Agregar datos del correntista
         if (!empty($this->correntistaData)) {
             $data['correntistaData'] = $this->correntistaData;
         }
 
-                // Incluir cnta_precio si tiene un valor
-                if (!empty($this->cnta_precio)) {
-                    $data['cnta_precio'] = $this->cnta_precio;
-                }
+        // Incluir cnta_precio si tiene un valor
+        if (!empty($this->cnta_precio)) {
+            $data['cnta_precio'] = $this->cnta_precio;
+        }
 
         // Realizar cálculos de montos
         $this->calcularMontos($data);
