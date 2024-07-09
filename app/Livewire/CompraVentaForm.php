@@ -33,7 +33,7 @@ class CompraVentaForm extends Component
     public $cnta_precio = ['cuenta' => '', 'DebeHaber' => null];
     public $cta_detracc = ['cuenta' => '', 'DebeHaber' => null];
     public $porcentaje;
-    public $montoSoles = [];
+    public $montoDolares = [];
 
     public function mount()
     {
@@ -112,17 +112,24 @@ class CompraVentaForm extends Component
 
     private function calcularMontos(&$data)
     {
-        Log::info('Calculating amounts based on currency. Current values:', [
-            'cod_moneda' => $this->cod_moneda,
-            'tip_cam' => $this->tip_cam,
-            'mon1' => $this->mon1,
-            'mon2' => $this->mon2,
-            'mon3' => $this->mon3,
-            'igv' => $this->igv,
-            'otro_tributo' => $this->otro_tributo,
-            'bas_imp' => $this->bas_imp
+        // Guardar los montos originales en dólares antes de la conversión
+        $this->montoDolares['mon1'] = $this->mon1;
+        $this->montoDolares['mon2'] = $this->mon2;
+        $this->montoDolares['mon3'] = $this->mon3;
+        $this->montoDolares['igv'] = $this->igv;
+        $this->montoDolares['otro_tributo'] = $this->otro_tributo;
+        $this->montoDolares['bas_imp'] = $this->bas_imp;
+    
+        Log::info('Montos en dólares antes de la conversión:', [
+            'mon1' => $this->montoDolares['mon1'],
+            'mon2' => $this->montoDolares['mon2'],
+            'mon3' => $this->montoDolares['mon3'],
+            'igv' => $this->montoDolares['igv'],
+            'otro_tributo' => $this->montoDolares['otro_tributo'],
+            'bas_imp' => $this->montoDolares['bas_imp']
         ]);
     
+        // Realizar cálculos según la moneda
         if ($this->cod_moneda == 'USD') {
             $data['mon1'] = round($this->mon1 * $this->tip_cam, 2);
             $data['mon2'] = round($this->mon2 * $this->tip_cam, 2);
@@ -131,7 +138,7 @@ class CompraVentaForm extends Component
             $data['otro_tributo'] = round($this->otro_tributo * $this->tip_cam, 2);
             $data['bas_imp'] = round($this->bas_imp * $this->tip_cam, 2);
     
-            Log::info('Amounts after conversion:', [
+            Log::info('Montos después de la conversión:', [
                 'mon1' => $data['mon1'],
                 'mon2' => $data['mon2'],
                 'mon3' => $data['mon3'],
@@ -141,6 +148,7 @@ class CompraVentaForm extends Component
             ]);
         }
     }
+    
     private function agregarDestinos($cuenta, $monto, $cc, $ref)
     {
         // Realizar consulta para obtener destinos
