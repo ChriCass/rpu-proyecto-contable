@@ -99,21 +99,21 @@
                                             <td class="center">{{ $data['cod_moneda'] ?? '-' }}</td>
                                             <td class="center">{{ $data['tip_cam'] ?? '-' }}</td>
                                             <td class="center">{{ $opigvs->where('Id', $data['opigv'])->first()->Descripcion ?? '-' }}</td>
-                                            <td class="center">{{ $data['bas_imp'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['igv'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['bas_imp'] : ($data['bas_imp'] ?? '-') }}</td>
+                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['igv'] : ($data['igv'] ?? '-') }}</td>
                                             <td class="center">{{ $data['no_gravadas'] ?? '-' }}</td>
                                             <td class="center">{{ $data['isc'] ?? '-' }}</td>
                                             <td class="center">{{ $data['imp_bol_pla'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['otro_tributo'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['otro_tributo'] : $data['otro_tributo'] ?? '-' }}</td>
                                             <td class="center">{{ $data['precio'] ?? '-' }}</td>
                                             <td class="center">{{ $data['glosa'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cnta1']['cuenta'] ?? '-' }}</td>
+                                            <td class="center">{{  $data['cnta1']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta2']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta3']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta_precio']['cuenta'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['mon1'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['mon2'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['mon3'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon1'] : ($data['mon1'] ?? '-')  }}</td>
+                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon2'] : ($data['mon2'] ?? '-')  }}</td>
+                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon3'] : ($data['mon3'] ?? '-')  }}</td>
                                             <td class="center">{{ $data['cc1'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc3'] ?? '-' }}</td>

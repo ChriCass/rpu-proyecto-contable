@@ -32,8 +32,18 @@ class CompraVentaForm extends Component
     public $cta_otro_t = ['cuenta' => '', 'DebeHaber' => null];
     public $cnta_precio = ['cuenta' => '', 'DebeHaber' => null];
     public $cta_detracc = ['cuenta' => '', 'DebeHaber' => null];
-    public $porcentaje;
+    public $porcentaje = '';
     public $montoDolares = [];
+    public $igv_manual = false;
+
+    protected $rules = [
+        'bas_imp' => 'nullable|numeric',
+        'igv' => 'nullable|numeric',
+        'isc' => 'nullable|numeric',
+        'imp_bol_pla' => 'nullable|numeric',
+        'otro_tributo' => 'nullable|numeric',
+    ];
+
 
     public function mount()
     {
@@ -48,6 +58,7 @@ class CompraVentaForm extends Component
         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
         $this->usuario = Auth::user();
     }
+
 
     #[On('correntistaEncontrado')]
     public function handleCorrentistaEncontrado($data)
@@ -65,61 +76,61 @@ class CompraVentaForm extends Component
 
 
 
-    public function updated()
-    {   
-        Log::info('Updated method called. Current values:', [
-            'bas_imp' => $this->bas_imp,
-            'porcentaje' => $this->porcentaje
-        ]);
-    
-        $this->mon1 = $this->bas_imp;
-        $this->calcularIgv();
-        $this->calcularPrecio();
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+
+        if ($propertyName == 'igv') {
+            $this->igv_manual = true;
+           
+        } elseif ($propertyName == 'porcentaje') {
+            $this->igv_manual = false;
+            $this->calcularIgv();
+  
+        } else {
+            if (!$this->igv_manual) {
+                $this->calcularIgv();
+            }
+            $this->calcularPrecio();
+           
+        }
     }
+
+
 
     public function calcularIgv()
     {
-        Log::info('Calculating IGV. Current values:', [
-            'bas_imp' => $this->bas_imp,
-            'porcentaje' => $this->porcentaje
-        ]);
-    
-        $this->igv = round(($this->bas_imp * $this->porcentaje) / 100, 2);
-        Log::info('IGV calculated:', ['igv' => $this->igv]);
+        if ($this->bas_imp && $this->porcentaje) {
+            $this->igv = round(($this->bas_imp * $this->porcentaje) / 100, 2);
+          
+        } else {
+            $this->igv = null;
+           
+        }
     }
+
 
     public function calcularPrecio()
     {
-        Log::info('Calculating Price. Current values:', [
-            'bas_imp' => $this->bas_imp,
-            'igv' => $this->igv,
-            'isc' => $this->isc,
-            'imp_bol_pla' => $this->imp_bol_pla,
-            'otro_tributo' => $this->otro_tributo
-        ]);
+        $this->precio = round(($this->bas_imp ?: 0) + ($this->igv ?: 0) + ($this->isc ?: 0) + ($this->imp_bol_pla ?: 0) + ($this->otro_tributo ?: 0), 2);
     
-        $this->precio = round(
-            ($this->bas_imp ?? 0) + 
-            ($this->igv ?? 0) + 
-            ($this->isc ?? 0) + 
-            ($this->imp_bol_pla ?? 0) + 
-            ($this->otro_tributo ?? 0), 
-            2
-        );
-    
-        Log::info('Price calculated:', ['precio' => $this->precio]);
     }
 
     private function calcularMontos(&$data)
     {
+
         // Guardar los montos originales en dólares antes de la conversión
-        $this->montoDolares['mon1'] = $this->mon1;
-        $this->montoDolares['mon2'] = $this->mon2;
-        $this->montoDolares['mon3'] = $this->mon3;
-        $this->montoDolares['igv'] = $this->igv;
-        $this->montoDolares['otro_tributo'] = $this->otro_tributo;
-        $this->montoDolares['bas_imp'] = $this->bas_imp;
-    
+        $this->montoDolares = [
+            'mon1' => $this->mon1,
+            'mon2' => $this->mon2,
+            'mon3' => $this->mon3,
+            'igv' => $this->igv,
+            'otro_tributo' => $this->otro_tributo,
+            'bas_imp' => $this->bas_imp,
+        ];
+
+        $this->dispatch('montoDolaresGuardado', $this->montoDolares);
+
         Log::info('Montos en dólares antes de la conversión:', [
             'mon1' => $this->montoDolares['mon1'],
             'mon2' => $this->montoDolares['mon2'],
@@ -128,7 +139,7 @@ class CompraVentaForm extends Component
             'otro_tributo' => $this->montoDolares['otro_tributo'],
             'bas_imp' => $this->montoDolares['bas_imp']
         ]);
-    
+
         // Realizar cálculos según la moneda
         if ($this->cod_moneda == 'USD') {
             $data['mon1'] = round($this->mon1 * $this->tip_cam, 2);
@@ -137,7 +148,7 @@ class CompraVentaForm extends Component
             $data['igv'] = round($this->igv * $this->tip_cam, 2);
             $data['otro_tributo'] = round($this->otro_tributo * $this->tip_cam, 2);
             $data['bas_imp'] = round($this->bas_imp * $this->tip_cam, 2);
-    
+
             Log::info('Montos después de la conversión:', [
                 'mon1' => $data['mon1'],
                 'mon2' => $data['mon2'],
@@ -148,7 +159,7 @@ class CompraVentaForm extends Component
             ]);
         }
     }
-    
+
     private function agregarDestinos($cuenta, $monto, $cc, $ref)
     {
         // Realizar consulta para obtener destinos
@@ -176,6 +187,8 @@ class CompraVentaForm extends Component
         }
         return $resultados;
     }
+
+
 
 
     public function submit()
@@ -225,6 +238,11 @@ class CompraVentaForm extends Component
             'ref_int3' => 'nullable'
         ]);
 
+        if ($this->tiene_detracc === 'si') {
+            $rules['cta_detracc.cuenta'] = 'required';
+            $rules['mont_detracc'] = 'required';
+        };
+
 
         // Verificar el valor del estado antes de procesar
         Log::info('Estado validado: ', ['estado' => $this->estado]);
@@ -244,6 +262,8 @@ class CompraVentaForm extends Component
         if ($this->libro == '01') {
             $data['cuenta_igv'] = 1673;
         }
+
+
 
 
         if (Auth::check()) {
@@ -282,6 +302,8 @@ class CompraVentaForm extends Component
             $data['cnta_precio'] = $this->cnta_precio;
         }
 
+
+
         // Realizar cálculos de montos
         $this->calcularMontos($data);
         // Obtener y agregar destinos para las cuentas
@@ -302,11 +324,19 @@ class CompraVentaForm extends Component
                 $data[$cuentaKey] = $cuenta;
             }
         }
+        // Verificar si tiene detracción y restar el monto de detracción del precio
+        if (array_key_exists('tiene_detracc', $data) && $data['tiene_detracc'] === 'si' && !empty($data['mont_detracc'])) {
+            $data['precio'] -= $data['mont_detracc'];
+        }
+
+
         Log::info('Data with calculations and destinations: ', $data);
 
         // Emitir el evento 'dataSubmitted' con los datos del formulario
         $this->dispatch('dataSubmitted', $data);
     }
+
+
 
 
     public function render()

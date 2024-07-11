@@ -8,11 +8,22 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use App\Models\TipoCambioSunat;
 use Illuminate\Support\Facades\Http;
-
+use Livewire\Attributes\On;
 class CambioSunat extends Component
 {
     public $tipoCambio;
     public $errorMessage;
+    public $esDolar;
+    public $mostrarContenido = false;
+    
+    
+    #[On('cambioaDolar')]
+    public function cambioaDolar($esDolar)
+    {
+        Log::info("Evento 'cambioaDolar' escuchado. Valor de esDolar: ", ['esDolar' => $esDolar]);
+        $this->esDolar = $esDolar;
+        $this->consultaApiCambio();
+    }
 
     public function consultaApiCambio()
     {
@@ -29,6 +40,7 @@ class CambioSunat extends Component
             ];
             Log::info("Tipo de cambio del día de hoy obtenido de la base de datos", $this->tipoCambio);
             $this->dispatch('tipoCambioEncontrado', $this->tipoCambio);
+            $this->mostrarContenido = true;
         } else {
             try {
                 Log::info("Consultando el último tipo de cambio de SUNAT");
@@ -52,6 +64,7 @@ class CambioSunat extends Component
                         'TipoCamVenta' => $this->tipoCambio['precio_venta'],
                     ]);
                     Log::info("El tipo de cambio ha sido guardado", $this->tipoCambio);
+                    $this->mostrarContenido = true;
                 } else {
                     $this->consultaBD();
                 }
@@ -79,6 +92,7 @@ class CambioSunat extends Component
             ];
             Log::info("Último tipo de cambio obtenido de la base de datos", $this->tipoCambio);
             $this->dispatch('tipoCambioEncontrado', $this->tipoCambio);
+            $this->mostrarContenido = true;
         } else {
             $this->errorMessage = 'No hay datos disponibles en la base de datos.';
             Log::error("No se encontraron datos en la base de datos.");

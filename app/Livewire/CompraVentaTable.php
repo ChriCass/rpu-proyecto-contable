@@ -13,7 +13,9 @@ use App\Models\EstadoDocumento;
 use App\Models\TipoComprobantePagoDocumento;
 use App\Models\Estado;
 class CompraVentaTable extends Component
+
 {   public $data = [];
+    public $montoDolares = [];
     public $empresa;
     public $rows = [];
     public $libros, $opigvs, $estado_docs, $estados, $ComprobantesPago;
@@ -23,6 +25,13 @@ class CompraVentaTable extends Component
         $this->data = $data;
         Log::info('Data received in CompraVentaTable: ', $this->data);
     }
+
+    #[On('montoDolaresGuardado')]
+        public function handleMontoDolaresGuardado($data)
+        {
+            $this->montoDolares = $data;
+            Log::info('Data received in CompraVentaTable: ', $this->montoDolares);
+        }
 
     public function mount()
     {

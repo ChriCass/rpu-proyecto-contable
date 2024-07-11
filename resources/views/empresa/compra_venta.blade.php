@@ -32,6 +32,7 @@
                     </div>
                     <livewire:alert-message />
                     <livewire:compra-venta-table />
+                    
                 </div>
             </div>
         </div>
@@ -47,7 +48,7 @@
                     </div>
                     <div class="modal-body">
                         <livewire:compra-venta-form :empresaId="$empresa->id" />
-
+   
                     </div>
                 </div>
             </div>

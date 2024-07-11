@@ -13,12 +13,22 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <!-- You can choose a theme from css/styles instead of get all themes -->
     <link href="{{ asset('css/styles/theme-green.css') }}" rel="stylesheet" />
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+ 
+    
     <style>
         * {
             font-family: 'Nunito', sans-serif;
+        }
+
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Para Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
         }
     </style>
     @livewireStyles
@@ -67,7 +77,7 @@
                         </a>
                     </li>
                     <!-- #END# Full Screen Button -->
- 
+
                     <li class="dropdown user_profile mx-3">
                         <div class="dropdown-toggle" data-bs-toggle="dropdown">
                             <img src="{{ asset('images/user.jpg') }}" alt="user">
@@ -98,7 +108,7 @@
                         </ul>
                     </li>
                     <!-- #END# Tasks -->
-              
+
                 </ul>
             </div>
         </div>
@@ -113,8 +123,7 @@
                     <li class="sidebar-user-panel active">
                         <div class="user-panel">
                             <div class=" image  ">
-                                <img src="{{ asset('images/usrbig.jpg') }}" class="user-img-style"
-                                    alt="User Image" />
+                                <img src="{{ asset('images/usrbig.jpg') }}" class="user-img-style" alt="User Image" />
                             </div>
                         </div>
                         <div class="profile-usertitle">
@@ -206,14 +215,14 @@
         </aside>
         <!-- #END# Left Sidebar -->
         <!-- Right Sidebar -->
- 
+
     </div>
 
 
     @yield('content')
 
     </div>
-
+ 
     <script src=" {{ asset('js/common.min.js') }}"></script>
     <!-- Custom Js -->
     <script src=" {{ asset('js/admin.js') }}"></script>
@@ -223,7 +232,7 @@
     <script src="{{ asset('js/pages/todo/todo.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @livewireScripts
-    
+
 </body>
 
 </html>

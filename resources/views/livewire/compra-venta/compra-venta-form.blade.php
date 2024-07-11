@@ -131,17 +131,18 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="bas_imp">Base Imponible</label>
-                    <input type="text" class="form-control"  id="bas_imp" wire:model.live="bas_imp" required >
+                    <input type="text" class="form-control numeric-input" id="bas_imp" wire:model.live="bas_imp" required>
                     @error('bas_imp') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="igv">IGV</label>
-                    <input type="text" class="form-control" id="igv" wire:model.live="igv" required  >
+                    <input type="text" class="form-control numeric-input" id="igv" wire:model.live="igv">
                     @error('igv') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+    
         </div>
     
         <!-- Cuarta fila de inputs -->
@@ -149,25 +150,28 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="no_gravadas">No Gravadas</label>
-                    <input type="text" class="form-control" id="no_gravadas" wire:model="no_gravadas">
+                    <input type="text" class="form-control numeric-input" id="no_gravadas" wire:model="no_gravadas">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="isc">ISC</label>
-                    <input type="text"   class="form-control" id="isc" wire:model.live="isc">
+                    <input type="text" class="form-control numeric-input" id="isc" wire:model.live="isc">
+                    @error('isc') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="imp_bol_pla">Importe Bol. Pla.</label>
-                    <input type="text"   class="form-control" id="imp_bol_pla" wire:model.live="imp_bol_pla">
+                    <input type="text" class="form-control numeric-input" id="imp_bol_pla" wire:model.live="imp_bol_pla">
+                    @error('imp_bol_pla') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="otro_tributo">Otro Tributo</label>
-                    <input type="text"   class="form-control" id="otro_tributo" wire:model.live="otro_tributo">
+                    <input type="text" class="form-control  numeric-input" id="otro_tributo" wire:model.live="otro_tributo">
+                    @error('otro_tributo') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>
@@ -177,7 +181,7 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="precio">Precio</label>
-                    <input type="text" class="form-control" readonly  id="precio"  value="{{$precio}}" >
+                    <input type="text" class="form-control" id="precio" value="{{ $precio }}" readonly>
                 </div>
             </div>
             <div class="col-md-3">
@@ -190,7 +194,7 @@
             <div class="col-md-3">
                 <div class="form-group mb-3">
                     <label for="cnta1">Cuenta 1</label>
-                    <input type="text" class="form-control" id="cnta1" wire:model="cnta1.cuenta" required>
+                    <input type="text" class="form-control " id="cnta1" wire:model="cnta1.cuenta" required>
                     @error('cnta1.cuenta') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -372,7 +376,7 @@
                     <select class="form-control" id="estado" wire:model="estado" required>
                         <option value="" disabled>Seleccione el estado</option>
                         @foreach ($estados as $estado)
-                            <option value="{{ $estado->N }}" @if(old('estado') == $estado->N) selected @endif>
+                            <option value="{{ $estado->N }}" @if(old('estado') == $estado->N)  @endif>
                                 {{ $estado->DESCRIPCION }}
                             </option>
                         @endforeach
@@ -380,7 +384,7 @@
                     @error('estado') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
-            
+
         </div>
     
         <!-- Botón de Envío -->
@@ -393,4 +397,19 @@
 </div>
 
 
- 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const numericFields = document.querySelectorAll('.numeric-input');
+
+        numericFields.forEach(field => {
+            field.addEventListener('input', function (e) {
+                let value = e.target.value;
+                // Remover espacios y caracteres que no sean números o puntos decimales
+                value = value.replace(/\s+/g, ''); // Eliminar espacios
+                value = value.replace(/[^0-9.]/g, ''); // Permitir solo números y puntos
+                e.target.value = value;
+            });
+        });
+    });
+</script>
+
