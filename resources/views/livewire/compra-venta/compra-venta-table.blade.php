@@ -22,6 +22,18 @@
     </div>
     <!-- resources/views/livewire/compra-venta/compra-venta-table.blade.php -->
     <div>
+
+        <!-- Alerts -->
+        @if ($statusType === 'success')
+            <div class="alert alert-success">
+                {{ $statusMessage }}
+            </div>
+        @elseif ($statusType === 'danger')
+            <div class="alert alert-danger">
+                {{ $statusMessage }}
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
@@ -41,7 +53,9 @@
                                             <th class="center">Fecha Doc</th>
                                             <th class="center">Fecha Ven</th>
                                             <th class="center">Correntista</th>
-                                            <th class="center">{{ isset($data['correntistaData']['nombre_o_razon_social']) ? 'Razon Social' : 'Nombre' }}</th> 
+                                            <th class="center">
+                                                {{ isset($data['correntistaData']['nombre_o_razon_social']) ? 'Razon Social' : 'Nombre' }}
+                                            </th>
                                             <th class="center">Tdoc</th>
                                             <th class="center">Ser</th>
                                             <th class="center">Num</th>
@@ -77,7 +91,7 @@
                                             <th class="center">Cuenta detracción</th>
                                             <th class="center">Monto detraccion</th>
                                             <th class="center">Ref Int1</th>
-                                            <th class="center">Ref Int2</th>                    
+                                            <th class="center">Ref Int2</th>
                                             <th class="center">Ref Int3</th>
                                             <th class="center">Estado Doc</th>
                                             <th class="center">Estado</th>
@@ -88,32 +102,54 @@
                                     <tbody>
                                         <tr>
                                             <td class="center">{{ $data['empresa'] ?? '-' }}</td>
-                                            <td class="center">{{ $libros->where('N', $data['libro'])->first()->DESCRIPCION ?? '-' }}</td>
+                                            <td class="center">
+                                                {{ $libros->where('N', $data['libro'])->first()->DESCRIPCION ?? '-' }}
+                                            </td>
                                             <td class="center">{{ $data['fecha_doc'] ?? '-' }}</td>
                                             <td class="center">{{ $data['fecha_ven'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['correntistaData']['dni'] ?? $data['correntistaData']['ruc'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['correntistaData']['nombre'] ?? $data['correntistaData']['nombre_o_razon_social'] ?? '-' }}</td>
-                                            <td class="center">{{ $ComprobantesPago->where('N', $data['tdoc'])->first()->DESCRIPCION ?? '-' }}</td>
+                                            <td class="center">
+                                                {{ $data['correntistaData']['dni'] ?? ($data['correntistaData']['ruc'] ?? '-') }}
+                                            </td>
+                                            <td class="center">
+                                                {{ $data['correntistaData']['nombre'] ?? ($data['correntistaData']['nombre_o_razon_social'] ?? '-') }}
+                                            </td>
+                                            <td class="center">
+                                                {{ $ComprobantesPago->where('N', $data['tdoc'])->first()->DESCRIPCION ?? '-' }}
+                                            </td>
                                             <td class="center">{{ $data['ser'] ?? '-' }}</td>
                                             <td class="center">{{ $data['num'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cod_moneda'] ?? '-' }}</td>
                                             <td class="center">{{ $data['tip_cam'] ?? '-' }}</td>
-                                            <td class="center">{{ $opigvs->where('Id', $data['opigv'])->first()->Descripcion ?? '-' }}</td>
-                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['bas_imp'] : ($data['bas_imp'] ?? '-') }}</td>
-                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['igv'] : ($data['igv'] ?? '-') }}</td>
+                                            <td class="center">
+                                                {{ $opigvs->where('Id', $data['opigv'])->first()->Descripcion ?? '-' }}
+                                            </td>
+                                            <td class="center">
+                                                {{ $data['cod_moneda'] == 'USD' ? $montoDolares['bas_imp'] : $data['bas_imp'] ?? '-' }}
+                                            </td>
+                                            <td class="center">
+                                                {{ $data['cod_moneda'] == 'USD' ? $montoDolares['igv'] : $data['igv'] ?? '-' }}
+                                            </td>
                                             <td class="center">{{ $data['no_gravadas'] ?? '-' }}</td>
                                             <td class="center">{{ $data['isc'] ?? '-' }}</td>
                                             <td class="center">{{ $data['imp_bol_pla'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['otro_tributo'] : $data['otro_tributo'] ?? '-' }}</td>
+                                            <td class="center">
+                                                {{ $data['cod_moneda'] == 'USD' ? $montoDolares['otro_tributo'] : $data['otro_tributo'] ?? '-' }}
+                                            </td>
                                             <td class="center">{{ $data['precio'] ?? '-' }}</td>
                                             <td class="center">{{ $data['glosa'] ?? '-' }}</td>
-                                            <td class="center">{{  $data['cnta1']['cuenta'] ?? '-' }}</td>
+                                            <td class="center">{{ $data['cnta1']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta2']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta3']['cuenta'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cnta_precio']['cuenta'] ?? '-' }}</td>
-                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon1'] : ($data['mon1'] ?? '-')  }}</td>
-                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon2'] : ($data['mon2'] ?? '-')  }}</td>
-                                            <td class="center">{{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon3'] : ($data['mon3'] ?? '-')  }}</td>
+                                            <td class="center">
+                                                {{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon1'] : $data['mon1'] ?? '-' }}
+                                            </td>
+                                            <td class="center">
+                                                {{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon2'] : $data['mon2'] ?? '-' }}
+                                            </td>
+                                            <td class="center">
+                                                {{ $data['cod_moneda'] == 'USD' ? $montoDolares['mon3'] : $data['mon3'] ?? '-' }}
+                                            </td>
                                             <td class="center">{{ $data['cc1'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['cc3'] ?? '-' }}</td>
@@ -130,8 +166,12 @@
                                             <td class="center">{{ $data['ref_int1'] ?? '-' }}</td>
                                             <td class="center">{{ $data['ref_int2'] ?? '-' }}</td>
                                             <td class="center">{{ $data['ref_int3'] ?? '-' }}</td>
-                                            <td class="center">{{ $estado_docs->where('id', $data['estado_doc'])->first()->descripcion ?? '-' }}</td>
-                                            <td class="center">{{ $estados->where('N', $data['estado'])->first()->DESCRIPCION ?? '-' }}</td>
+                                            <td class="center">
+                                                {{ $estado_docs->where('id', $data['estado_doc'])->first()->descripcion ?? '-' }}
+                                            </td>
+                                            <td class="center">
+                                                {{ $estados->where('N', $data['estado'])->first()->DESCRIPCION ?? '-' }}
+                                            </td>
                                             <td class="center">
                                                 <a href="#" class="btn btn-tbl-edit">
                                                     <i class="material-icons">create</i>
@@ -140,11 +180,10 @@
                                                     <i class="material-icons">delete_forever</i>
                                                 </a>
                                             </td>
-                                            <td class="center">{{$data['usuario']['id']}}</td>
+                                            <td class="center">{{ $data['usuario']['id'] }}</td>
                                         </tr>
                                     </tbody>
                                 @else
-                                    
                                     <tbody>
                                         <tr>
                                             <td class="center" colspan="37">¡Mostraremos aquí la info!</td>
@@ -153,9 +192,16 @@
                                 @endif
                             </table>
                         </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary"
+                                @if (empty($data)) disabled @endif wire:click="insertData">Insertar
+                                Información</button>
+                        </div>
+
+
                     </div>
-                    
-                    
+
+
                 </div>
             </div>
         </div>

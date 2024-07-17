@@ -55,6 +55,13 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group mb-3">
+                    <label class="fw-bold" for="fecha_ven">Fecha de vaucher</label>
+                    <input type="date" class="form-control" id="fecha_ven" wire:model="fecha_vaucher" required>
+                    @error('fecha_vaucher') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-3">
                     <label class="fw-bold" for="ser">Serie</label>
                     <input type="text" class="form-control" id="ser" wire:model="ser">
                 </div>
