@@ -157,24 +157,34 @@ class CompraVentaForm extends Component
 
     private function agregarDestinos($cuenta, $monto, $cc, $ref, $libro)
     {
+        Log::info('Valor de libro ingresando a agregarDestinos: ' . $libro);
+
         // Realizar consulta para obtener destinos
         $destinos = PlanContable::select('Dest1D', 'Dest1H', 'Dest2D', 'Dest2H')
             ->where('CtaCtable', $cuenta)
             ->first();
-    
+
         Log::info('Consulta de destinos para la cuenta: ' . $cuenta, ['destinos' => $destinos]);
-    
+
         $resultados = [];
         if ($destinos) {
             $destinosArray = $destinos->toArray();
             foreach ($destinosArray as $key => $dest) {
                 if (trim($dest) !== '') {
                     // Asignar DebeHaber en función de libro
-                    if ($libro != '01') {
+                    if ($libro == '01') {
                         $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 1 : 2;
                     } else {
                         $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 2 : 1;
                     }
+
+                    Log::info('Asignación de DebeHaber', [
+                        'libro' => $libro,
+                        'key' => $key,
+                        'DebeHaber' => $DebeHaber,
+                        'cuenta' => $dest
+                    ]);
+
                     $resultados[] = [
                         'cuenta' => $dest,
                         'DebeHaber' => $DebeHaber,
@@ -182,36 +192,56 @@ class CompraVentaForm extends Component
                         'cc' => $cc,
                         'ref' => $ref
                     ];
+
+                    Log::info('Destino añadido', [
+                        'cuenta' => $dest,
+                        'DebeHaber' => $DebeHaber,
+                        'monto' => $monto,
+                        'cc' => $cc,
+                        'ref' => $ref
+                    ]);
+                } else {
+                    Log::info('Destino vacío', ['key' => $key]);
                 }
             }
+        } else {
+            Log::info('No se encontraron destinos para la cuenta', ['cuenta' => $cuenta]);
         }
+
+        Log::info('Libro utilizado para asignación de DebeHaber: ' . $libro);
+
         return $resultados;
     }
-    
+
+
 
     public function validacionesLibros(&$data)
+
     {
+
+        Log::info('Valor de libro en validacionesLibros: ' . $data['libro']);
+
         if ($this->libro == '01') {
             if ($this->tdoc != '07') {
                 Log::info('Libro es 01 y tdoc no es 07.');
-    
+
                 $data['cuenta_igv'] = [
                     'DebeHaber' => 1,
                     'valor' => 1673,
                     'igv' => $this->igv,
                 ];
-    
+
                 Log::info('Asignado cuenta IGV:', $data['cuenta_igv']);
-    
+
                 if (!empty($this->otro_tributo)) {
                     $data['cta_otro_t']['DebeHaber'] = 1;
                     Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 1.');
                 }
-    
+
                 if (empty($this->tiene_detracc) || $this->tiene_detracc === 'no') {
                     $data['cnta_precio']['DebeHaber'] = 2;
                     $data['cnta_precio']['precioTotal'] = $this->precio;
-    
+
                     Log::info('No tiene detracción o tiene_detracc es "no". Asignado cnta_precio:', [
                         'DebeHaber' => $data['cnta_precio']['DebeHaber'],
                         'precioTotal' => $data['cnta_precio']['precioTotal']
@@ -224,24 +254,24 @@ class CompraVentaForm extends Component
                 }
             } else {
                 Log::info('Libro es 01 pero tdoc es 07.');
-    
+
                 $data['cuenta_igv'] = [
                     'DebeHaber' => 2,
                     'valor' => 1673,
                     'igv' => $this->igv,
                 ];
-    
+
                 Log::info('Asignado cuenta IGV en else (tdoc es 07):', $data['cuenta_igv']);
-    
+
                 if (!empty($this->otro_tributo)) {
                     $data['cta_otro_t']['DebeHaber'] = 2;
                     Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 2.');
                 }
-    
+
                 if (empty($this->tiene_detracc) || $this->tiene_detracc === 'no') {
                     $data['cnta_precio']['DebeHaber'] = 1;
                     $data['cnta_precio']['precioTotal'] = $this->precio;
-    
+
                     Log::info('No tiene detracción o tiene_detracc es "no" en else (tdoc es 07). Asignado cnta_precio:', [
                         'DebeHaber' => $data['cnta_precio']['DebeHaber'],
                         'precioTotal' => $data['cnta_precio']['precioTotal']
@@ -254,25 +284,27 @@ class CompraVentaForm extends Component
                 }
             }
         } else {
+
+
             Log::info('Libro no es 01.');
-    
+
             $data['cuenta_igv'] = [
                 'DebeHaber' => 2,
                 'valor' => 40111,
                 'igv' => $this->igv,
             ];
-    
+
             Log::info('Asignado cuenta IGV en else:', $data['cuenta_igv']);
-    
+
             if (!empty($this->otro_tributo)) {
                 $data['cta_otro_t']['DebeHaber'] = 2;
                 Log::info('Otro tributo no está vacío, asignado cta_otro_t DebeHaber a 2.');
             }
-    
+
             if (empty($this->tiene_detracc) || $this->tiene_detracc === 'no') {
                 $data['cnta_precio']['DebeHaber'] = 1;
                 $data['cnta_precio']['precioTotal'] = $this->precio;
-    
+
                 Log::info('No tiene detracción o tiene_detracc es "no" en else. Asignado cnta_precio:', [
                     'DebeHaber' => $data['cnta_precio']['DebeHaber'],
                     'precioTotal' => $data['cnta_precio']['precioTotal']
@@ -285,7 +317,7 @@ class CompraVentaForm extends Component
             }
         }
     }
-    
+
 
 
 
@@ -357,7 +389,7 @@ class CompraVentaForm extends Component
                 $data[$key] = $value;
             }
         }
-
+        Log::info('Valor de libro después de preparar $data: ' . $data['libro']);
 
 
         if (Auth::check()) {
@@ -381,39 +413,44 @@ class CompraVentaForm extends Component
             $data['correntistaData'] = $this->correntistaData;
         }
 
-
+        // Validar el valor de libro antes de pasar a validacionesLibros
+        Log::info('Valor de libro antes de validacionesLibros: ' . $data['libro']);
 
         $this->validacionesLibros($data);
+
+        Log::info('Valor de libro después de validacionesLibros: ' . $data['libro']);
+
 
         // Realizar cálculos de montos
         $this->calcularMontos($data);
         // Obtener y agregar destinos para las cuentas
- 
 
- foreach (['cnta1', 'cnta2', 'cnta3'] as $cuentaKey) {
-    $cuenta = $this->$cuentaKey;
-    if (!empty($cuenta['cuenta'])) {
-        // Determinar DebeHaber en función de tdoc y libro ///aqui se controla tanto los 1 en compras y el 2 en ventas, SOLO EN LAS CUENTAS->REVISAR CONDICIONAL PARA SIGUIENTES
-        if (($this->libro == '01' && $this->tdoc != '07') || ($this->libro != '01' && $this->tdoc == '07')) {
-            $cuenta['DebeHaber'] = 1;
-        } else {
-            if (is_null($cuenta['DebeHaber'])) {
-                $cuenta['DebeHaber'] = 2;
+
+        Log::info('Valor de libro después de calcularMontos: ' . $data['libro']);
+
+    // Obtener y agregar destinos para las cuentas
+    foreach (['cnta1', 'cnta2', 'cnta3'] as $cuentaKey) {
+        $cuenta = $this->$cuentaKey;
+        if (!empty($cuenta['cuenta'])) {
+            $monto = $this->{"mon" . substr($cuentaKey, -1)};
+            $cc = $this->{"cc" . substr($cuentaKey, -1)};
+            $ref = $this->{"ref_int" . substr($cuentaKey, -1)};
+
+            // Log para validar el valor de libro antes de llamar a agregarDestinos
+            Log::info('Valor de libro antes de agregarDestinos: ' . $data['libro']);
+
+            // Aquí parece estar el problema, debemos asegurarnos que el valor correcto de $data['libro'] se pase a la función
+            $libroCorrecto = $data['libro'];
+            Log::info('Valor de libro antes de llamar a agregarDestinos: ' . $libroCorrecto);
+
+            $cuentaDestinos = $this->agregarDestinos($cuenta['cuenta'], $monto, $cc, $ref, $libroCorrecto);
+            if (!empty($cuentaDestinos)) {
+                $data["{$cuentaKey}_destinos"] = $cuentaDestinos;
             }
+            $data[$cuentaKey] = $cuenta;
         }
-
-        $monto = $this->{"mon" . substr($cuentaKey, -1)};
-        $cc = $this->{"cc" . substr($cuentaKey, -1)};
-        $ref = $this->{"ref_int" . substr($cuentaKey, -1)};
-        $cuentaDestinos = $this->agregarDestinos($cuenta['cuenta'], $monto, $cc, $ref, $this->tdoc, $this->libro);
-        if (!empty($cuentaDestinos)) {
-            $data["{$cuentaKey}_destinos"] = $cuentaDestinos;
-        }
-        $data[$cuentaKey] = $cuenta;
     }
-}
 
-        
 
         // Verificar si tiene detracción y restar el monto de detracción del precio
         if (array_key_exists('tiene_detracc', $data) && $data['tiene_detracc'] === 'si' && !empty($data['mont_detracc'])) {
