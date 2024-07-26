@@ -26,10 +26,11 @@ class CompraVentaTable extends Component
     public $libros, $opigvs, $estado_docs, $estados, $ComprobantesPago;
     public $statusMessage;
     public $statusType;
+
     #[On('dataSubmitted')]
     public function handleDataSubmitted($data)
     {
-        $this->data = $data;
+        $this->data[] = $data; // Acumular los datos en lugar de reemplazarlos
         Log::info('Data received in CompraVentaTable: ', $this->data);
     }
 
@@ -50,62 +51,67 @@ class CompraVentaTable extends Component
         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
     }
 
-    public function NoMoreRow()
+    public function NoMoreRow($index)
     {
-        $this->data = [];
+        if (isset($this->data[$index])) {
+            unset($this->data[$index]);
+            $this->data = array_values($this->data); // Reindexar el array
+        }
     }
     public function insertData()
     {
         Log::info('Starting data insertion');
         try {
-            // Determinar el valor de Vou
-            $vou = $this->getVou($this->data['fecha_doc'], $this->data['libro']);
-            $this->data['Vou'] = $vou;
+            foreach ($this->data as $dataItem) {
+                // Determinar el valor de Vou
+                $vou = $this->getVou($dataItem['fecha_doc'], $dataItem['libro']);
+                $dataItem['Vou'] = $vou;
 
-            // Verificar y asignar Cnta y DebeHaber para la primera inserción
-            if (empty($this->data['cnta1']['cuenta']) || !isset($this->data['cnta1']['DebeHaber'])) {
-                throw new Exception("La columna 'cnta1' o su 'DebeHaber' no puede ser nula");
-            }
-            $this->data['Cnta'] = $this->data['cnta1']['cuenta'];
-            $this->data['DebeHaber'] = $this->data['cnta1']['DebeHaber'];
-            $this->data['MontSoles'] = $this->data['mon1'];
+                // Verificar y asignar Cnta y DebeHaber para la primera inserción
+                if (empty($dataItem['cnta1']['cuenta']) || !isset($dataItem['cnta1']['DebeHaber'])) {
+                    throw new Exception("La columna 'cnta1' o su 'DebeHaber' no puede ser nula");
+                }
+                $dataItem['Cnta'] = $dataItem['cnta1']['cuenta'];
+                $dataItem['DebeHaber'] = $dataItem['cnta1']['DebeHaber'];
+                $dataItem['MontSoles'] = $dataItem['mon1'];
 
-            // Inserción de la data principal
-            Log::info('Inserting main data');
-            $this->insertIntoTabla($this->data);
+                // Inserción de la data principal
+                Log::info('Inserting main data');
+                $this->insertIntoTabla($dataItem);
 
-            // Inserción de cuenta_igv
-            if (!empty($this->data['cuenta_igv'])) {
-                Log::info('Inserting cuenta_igv');
-                $igvData = $this->data;
-                $igvData['Cnta'] = $this->data['cuenta_igv']['valor'];
-                $igvData['DebeHaber'] = $this->data['cuenta_igv']['DebeHaber'];
-                $igvData['MontSoles'] = $this->data['igv'];
-                $this->insertIntoTabla($igvData);
-            }
+                // Inserción de cuenta_igv
+                if (!empty($dataItem['cuenta_igv'])) {
+                    Log::info('Inserting cuenta_igv');
+                    $igvData = $dataItem;
+                    $igvData['Cnta'] = $dataItem['cuenta_igv']['valor'];
+                    $igvData['DebeHaber'] = $dataItem['cuenta_igv']['DebeHaber'];
+                    $igvData['MontSoles'] = $dataItem['igv'];
+                    $this->insertIntoTabla($igvData);
+                }
 
-            // Inserción de cuentas destino
-            foreach (['cnta1', 'cnta2', 'cnta3'] as $index => $cuentaKey) {
-                if (!empty($this->data["{$cuentaKey}_destinos"])) {
-                    foreach ($this->data["{$cuentaKey}_destinos"] as $destino) {
-                        Log::info('Inserting destino for ' . $cuentaKey, ['destino' => $destino]);
-                        $destinoData = $this->data;
-                        $destinoData['Cnta'] = $destino['cuenta'];
-                        $destinoData['DebeHaber'] = $destino['DebeHaber'];
-                        $destinoData['MontSoles'] = $destino['monto'];
-                        $this->insertIntoTabla($destinoData);
+                // Inserción de cuentas destino
+                foreach (['cnta1', 'cnta2', 'cnta3'] as $index => $cuentaKey) {
+                    if (!empty($dataItem["{$cuentaKey}_destinos"])) {
+                        foreach ($dataItem["{$cuentaKey}_destinos"] as $destino) {
+                            Log::info('Inserting destino for ' . $cuentaKey, ['destino' => $destino]);
+                            $destinoData = $dataItem;
+                            $destinoData['Cnta'] = $destino['cuenta'];
+                            $destinoData['DebeHaber'] = $destino['DebeHaber'];
+                            $destinoData['MontSoles'] = $destino['monto'];
+                            $this->insertIntoTabla($destinoData);
+                        }
                     }
                 }
-            }
 
-            // Inserción de cuenta_precio
-            if (!empty($this->data['cnta_precio'])) {
-                Log::info('Inserting cuenta_precio');
-                $precioData = $this->data;
-                $precioData['Cnta'] = $this->data['cnta_precio']['cuenta'];
-                $precioData['DebeHaber'] = $this->data['cnta_precio']['DebeHaber'];
-                $precioData['MontSoles'] = $this->data['cnta_precio']['precioTotal'];
-                $this->insertIntoTabla($precioData);
+                // Inserción de cuenta_precio
+                if (!empty($dataItem['cnta_precio'])) {
+                    Log::info('Inserting cuenta_precio');
+                    $precioData = $dataItem;
+                    $precioData['Cnta'] = $dataItem['cnta_precio']['cuenta'];
+                    $precioData['DebeHaber'] = $dataItem['cnta_precio']['DebeHaber'];
+                    $precioData['MontSoles'] = $dataItem['cnta_precio']['precioTotal'];
+                    $this->insertIntoTabla($precioData);
+                }
             }
 
             Log::info('Data insertion completed');
@@ -117,6 +123,7 @@ class CompraVentaTable extends Component
             $this->statusType = 'danger';
         }
     }
+
     private function getVou($fechaDoc, $libro)
     {
         $mes = date('m', strtotime($fechaDoc));
@@ -132,6 +139,7 @@ class CompraVentaTable extends Component
 
         return 1;
     }
+
     private function insertIntoTabla($data)
     {
         Log::info('Inserting into Tabla', ['data' => $data]);
@@ -188,10 +196,12 @@ class CompraVentaTable extends Component
 
         Log::info('Inserted into Tabla successfully');
     }
+
     public function render()
     {
         return view('livewire.compra-venta.compra-venta-table', [
-            'data' => $this->data, 'libros' => $this->libros,
+            'data' => $this->data,
+            'libros' => $this->libros,
             'opigvs' => $this->opigvs,
             'estado_docs' => $this->estado_docs,
             'estados' => $this->estados,

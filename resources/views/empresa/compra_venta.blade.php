@@ -1,8 +1,6 @@
-{{-- Vista empresa/compra_venta.blade.php --}}
 @extends('layouts.sidebar-home')
 
 @section('content')
- 
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
@@ -32,27 +30,45 @@
                     </div>
                     <livewire:alert-message />
                     <livewire:compra-venta-table />
-                    
                 </div>
             </div>
         </div>
     </div>
-        <!-- Modal -->
-        <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="formModalLabel">Formulario de Compra-Ventas
-                            {{ $empresa->Nombre }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <livewire:compra-venta-form :empresaId="$empresa->id" />
-   
-                    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formModalLabel">Formulario de Compra-Ventas {{ $empresa->Nombre }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <livewire:compra-venta-form :empresaId="$empresa->id" />
                 </div>
             </div>
         </div>
+    </div>
 </section>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const numericFields = document.querySelectorAll('.numeric-input');
+
+        numericFields.forEach(field => {
+            field.addEventListener('input', function (e) {
+                let value = e.target.value;
+                value = value.replace(/\s+/g, '');
+                value = value.replace(/[^0-9.]/g, '');
+                e.target.value = value;
+            });
+        });
+
+        // Detectar el evento de cierre del modal
+        const formModal = document.getElementById('formModal');
+        formModal.addEventListener('hidden.bs.modal', function () {
+            Livewire.emit('resetFields');
+        });
+    });
+</script>
 @endsection

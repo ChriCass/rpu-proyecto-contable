@@ -462,8 +462,29 @@ class CompraVentaForm extends Component
 
         // Emitir el evento 'dataSubmitted' con los datos del formulario
         $this->dispatch('dataSubmitted', $data);
+
+        $this->resetFields(); // Reiniciar campos después de enviar el formulario
     }
 
+    public function resetFields()
+    {
+        $this->reset([
+            'libro', 'fecha_doc', 'fecha_ven', 'tdoc', 'ser', 'num', 'cod_moneda',
+            'tip_cam', 'opigv', 'bas_imp', 'igv', 'no_gravadas', 'isc', 'imp_bol_pla', 'otro_tributo',
+            'precio', 'glosa', 'mon1', 'mon2', 'mon3',
+            'cc1', 'cc2', 'cc3', 'fecha_emod', 'tdoc_emod', 'ser_emod', 'num_emod',
+            'fec_emi_detr', 'num_const_der', 'tiene_detracc', 'mont_detracc',
+            'ref_int1', 'ref_int2', 'ref_int3', 'estado_doc', 'estado',
+            'fecha_vaucher', 'correntistaData'
+        ]);
+        $this->cnta1 = ['cuenta' => '', 'DebeHaber' => null];
+        $this->cnta2 = ['cuenta' => '', 'DebeHaber' => null];
+        $this->cnta3 = ['cuenta' => '', 'DebeHaber' => null];
+        $this->cta_otro_t = ['cuenta' => '', 'DebeHaber' => null];
+        $this->cnta_precio = ['cuenta' => '', 'DebeHaber' => null, 'precioTotal' => null];
+        $this->cta_detracc = ['cuenta' => '', 'DebeHaber' => null];
+        $this->igv_manual = false;
+    }
 
 
 
