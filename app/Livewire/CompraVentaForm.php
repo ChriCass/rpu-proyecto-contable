@@ -36,6 +36,7 @@ class CompraVentaForm extends Component
     public $porcentaje = '';
     public $montoDolares = [];
     public $igv_manual = false;
+    public $editIndex = null; // Para almacenar el índice del dato que se está editando
 
     protected $rules = [
         'bas_imp' => 'nullable|numeric',
@@ -45,21 +46,18 @@ class CompraVentaForm extends Component
         'otro_tributo' => 'nullable|numeric',
     ];
 
-
     public function mount()
     {
         $this->libros = Libro::all();
         $this->opigvs = Opigv::all();
         $this->estado_docs = EstadoDocumento::all();
         $this->estados = Estado::all()->map(function ($estado) {
-            // Verificar que los estados se obtienen correctamente
             Log::info('Estado cargado: ', ['N' => $estado->N, 'Descripcion' => $estado->DESCRIPCION]);
             return $estado;
         });
         $this->ComprobantesPago = TipoComprobantePagoDocumento::all();
         $this->usuario = Auth::user();
     }
-
 
     #[On('correntistaEncontrado')]
     public function handleCorrentistaEncontrado($data)
@@ -74,8 +72,6 @@ class CompraVentaForm extends Component
         Log::info('El tipo de cambio encontrado es: ', $data);
         $this->tip_cam = is_numeric($data['precio_venta']) ? round((float)$data['precio_venta'], 2) : 0.00;
     }
-
-
 
     public function updated($propertyName)
     {
@@ -94,8 +90,6 @@ class CompraVentaForm extends Component
         }
     }
 
-
-
     public function calcularIgv()
     {
         if ($this->bas_imp && $this->porcentaje) {
@@ -105,7 +99,6 @@ class CompraVentaForm extends Component
         }
     }
 
-
     public function calcularPrecio()
     {
         $this->precio = round(($this->bas_imp ?: 0) + ($this->igv ?: 0) + ($this->isc ?: 0) + ($this->imp_bol_pla ?: 0) + ($this->otro_tributo ?: 0), 2);
@@ -113,8 +106,6 @@ class CompraVentaForm extends Component
 
     private function calcularMontos(&$data)
     {
-
-        // Guardar los montos originales en dólares antes de la conversión
         $this->montoDolares = [
             'mon1' => $this->mon1,
             'mon2' => $this->mon2,
@@ -126,16 +117,8 @@ class CompraVentaForm extends Component
 
         $this->dispatch('montoDolaresGuardado', $this->montoDolares);
 
-        Log::info('Montos en dólares antes de la conversión:', [
-            'mon1' => $this->montoDolares['mon1'],
-            'mon2' => $this->montoDolares['mon2'],
-            'mon3' => $this->montoDolares['mon3'],
-            'igv' => $this->montoDolares['igv'],
-            'otro_tributo' => $this->montoDolares['otro_tributo'],
-            'bas_imp' => $this->montoDolares['bas_imp']
-        ]);
+        Log::info('Montos en dólares antes de la conversión:', $this->montoDolares);
 
-        // Realizar cálculos según la moneda
         if ($this->cod_moneda == 'USD') {
             $data['mon1'] = round($this->mon1 * $this->tip_cam, 2);
             $data['mon2'] = round($this->mon2 * $this->tip_cam, 2);
@@ -159,7 +142,6 @@ class CompraVentaForm extends Component
     {
         Log::info('Valor de libro ingresando a agregarDestinos: ' . $libro);
 
-        // Realizar consulta para obtener destinos
         $destinos = PlanContable::select('Dest1D', 'Dest1H', 'Dest2D', 'Dest2H')
             ->where('CtaCtable', $cuenta)
             ->first();
@@ -171,7 +153,6 @@ class CompraVentaForm extends Component
             $destinosArray = $destinos->toArray();
             foreach ($destinosArray as $key => $dest) {
                 if (trim($dest) !== '') {
-                    // Asignar DebeHaber en función de libro
                     if ($libro == '01') {
                         $DebeHaber = ($key == 'Dest1D' || $key == 'Dest2D') ? 1 : 2;
                     } else {
@@ -213,12 +194,8 @@ class CompraVentaForm extends Component
         return $resultados;
     }
 
-
-
     public function validacionesLibros(&$data)
-
     {
-
         Log::info('Valor de libro en validacionesLibros: ' . $data['libro']);
 
         if ($this->libro == '01') {
@@ -284,8 +261,6 @@ class CompraVentaForm extends Component
                 }
             }
         } else {
-
-
             Log::info('Libro no es 01.');
 
             $data['cuenta_igv'] = [
@@ -318,12 +293,8 @@ class CompraVentaForm extends Component
         }
     }
 
-
-
-
     public function submit()
     {
-        // Emitir el evento 'dataSubmitted' con los datos del formulario
         $validatedData = $this->validate([
             'correntistaData' => 'required',
             'libro' => 'required',
@@ -372,25 +343,18 @@ class CompraVentaForm extends Component
         if ($this->tiene_detracc === 'si') {
             $rules['cta_detracc.cuenta'] = 'required';
             $rules['mont_detracc'] = 'required';
-        };
+        }
 
-
-        // Verificar el valor del estado antes de procesar
         Log::info('Estado validado: ', ['estado' => $this->estado]);
-
-
         Log::info('Data submitted: ', $validatedData);
 
-
-        // Preparar $data solo con los campos que tienen valores
         $data = [];
         foreach ($validatedData as $key => $value) {
-            if (!is_null($value) || $value === 0) { // Asegúrate de incluir el valor 0
+            if (!is_null($value) || $value === 0) {
                 $data[$key] = $value;
             }
         }
         Log::info('Valor de libro después de preparar $data: ' . $data['libro']);
-
 
         if (Auth::check()) {
             $data['usuario'] = [
@@ -403,89 +367,163 @@ class CompraVentaForm extends Component
             $data['empresa'] = $this->empresaId;
         }
 
-
-
-
-
-
-        // Agregar datos del correntista
         if (!empty($this->correntistaData)) {
             $data['correntistaData'] = $this->correntistaData;
         }
 
-        // Validar el valor de libro antes de pasar a validacionesLibros
         Log::info('Valor de libro antes de validacionesLibros: ' . $data['libro']);
-
         $this->validacionesLibros($data);
-
         Log::info('Valor de libro después de validacionesLibros: ' . $data['libro']);
-
-
-        // Realizar cálculos de montos
         $this->calcularMontos($data);
-        // Obtener y agregar destinos para las cuentas
 
-
-        Log::info('Valor de libro después de calcularMontos: ' . $data['libro']);
-
-    // Obtener y agregar destinos para las cuentas
-    foreach (['cnta1', 'cnta2', 'cnta3'] as $cuentaKey) {
-        $cuenta = $this->$cuentaKey;
-        if (!empty($cuenta['cuenta'])) {
-            $monto = $this->{"mon" . substr($cuentaKey, -1)};
-            $cc = $this->{"cc" . substr($cuentaKey, -1)};
-            $ref = $this->{"ref_int" . substr($cuentaKey, -1)};
-
-            // Log para validar el valor de libro antes de llamar a agregarDestinos
-            Log::info('Valor de libro antes de agregarDestinos: ' . $data['libro']);
-
-            // Aquí parece estar el problema, debemos asegurarnos que el valor correcto de $data['libro'] se pase a la función
-            $libroCorrecto = $data['libro'];
-            Log::info('Valor de libro antes de llamar a agregarDestinos: ' . $libroCorrecto);
-
-            $cuentaDestinos = $this->agregarDestinos($cuenta['cuenta'], $monto, $cc, $ref, $libroCorrecto);
-            if (!empty($cuentaDestinos)) {
-                $data["{$cuentaKey}_destinos"] = $cuentaDestinos;
+        foreach (['cnta1', 'cnta2', 'cnta3'] as $cuentaKey) {
+            $cuenta = $this->$cuentaKey;
+            if (!empty($cuenta['cuenta'])) {
+                $monto = $this->{"mon" . substr($cuentaKey, -1)};
+                $cc = $this->{"cc" . substr($cuentaKey, -1)};
+                $ref = $this->{"ref_int" . substr($cuentaKey, -1)};
+                Log::info('Valor de libro antes de agregarDestinos: ' . $data['libro']);
+                $libroCorrecto = $data['libro'];
+                Log::info('Valor de libro antes de llamar a agregarDestinos: ' . $libroCorrecto);
+                $cuentaDestinos = $this->agregarDestinos($cuenta['cuenta'], $monto, $cc, $ref, $libroCorrecto);
+                if (!empty($cuentaDestinos)) {
+                    $data["{$cuentaKey}_destinos"] = $cuentaDestinos;
+                }
+                $data[$cuentaKey] = $cuenta;
             }
-            $data[$cuentaKey] = $cuenta;
         }
-    }
 
-
-        // Verificar si tiene detracción y restar el monto de detracción del precio
         if (array_key_exists('tiene_detracc', $data) && $data['tiene_detracc'] === 'si' && !empty($data['mont_detracc'])) {
             $data['precio'] -= $data['mont_detracc'];
         }
 
-
         Log::info('Data with calculations and destinations: ', $data);
+        if (is_null($this->editIndex)) {
+            $this->dispatch('dataSubmitted', $data);
+        } else {
+            $this->dispatch('dataUpdated', ['index' => $this->editIndex, 'data' => $data]);
+        }
 
-        // Emitir el evento 'dataSubmitted' con los datos del formulario
-        $this->dispatch('dataSubmitted', $data);
-
-        $this->resetFields(); // Reiniciar campos después de enviar el formulario
+        // Reset fields after submit
+        $this->resetFields();
     }
 
-    public function resetFields()
-    {
-        $this->reset([
-            'libro', 'fecha_doc', 'fecha_ven', 'tdoc', 'ser', 'num', 'cod_moneda',
-            'tip_cam', 'opigv', 'bas_imp', 'igv', 'no_gravadas', 'isc', 'imp_bol_pla', 'otro_tributo',
-            'precio', 'glosa', 'mon1', 'mon2', 'mon3',
-            'cc1', 'cc2', 'cc3', 'fecha_emod', 'tdoc_emod', 'ser_emod', 'num_emod',
-            'fec_emi_detr', 'num_const_der', 'tiene_detracc', 'mont_detracc',
-            'ref_int1', 'ref_int2', 'ref_int3', 'estado_doc', 'estado',
-            'fecha_vaucher', 'correntistaData'
-        ]);
-        $this->cnta1 = ['cuenta' => '', 'DebeHaber' => null];
-        $this->cnta2 = ['cuenta' => '', 'DebeHaber' => null];
-        $this->cnta3 = ['cuenta' => '', 'DebeHaber' => null];
-        $this->cta_otro_t = ['cuenta' => '', 'DebeHaber' => null];
-        $this->cnta_precio = ['cuenta' => '', 'DebeHaber' => null, 'precioTotal' => null];
-        $this->cta_detracc = ['cuenta' => '', 'DebeHaber' => null];
-        $this->igv_manual = false;
-    }
+    #[On('loadData')]
+public function loadData($params)
+{
+    $index = $params['index'];
+    $data = $params['data'];
 
+    $this->editIndex = $index;
+    $this->empresaId = $data['empresa'] ?? null;
+    $this->libro = $data['libro'] ?? null;
+    $this->fecha_doc = $data['fecha_doc'] ?? null;
+    $this->fecha_ven = $data['fecha_ven'] ?? null;
+    $this->tdoc = $data['tdoc'] ?? null;
+    $this->ser = $data['ser'] ?? null;
+    $this->num = $data['num'] ?? null;
+    $this->cod_moneda = $data['cod_moneda'] ?? null;
+    $this->tip_cam = $data['tip_cam'] ?? null;
+    $this->opigv = $data['opigv'] ?? null;
+    $this->bas_imp = $data['bas_imp'] ?? null;
+    $this->igv = $data['igv'] ?? null;
+    $this->no_gravadas = $data['no_gravadas'] ?? null;
+    $this->isc = $data['isc'] ?? null;
+    $this->imp_bol_pla = $data['imp_bol_pla'] ?? null;
+    $this->otro_tributo = $data['otro_tributo'] ?? null;
+    $this->precio = $data['precio'] ?? null;
+    $this->glosa = $data['glosa'] ?? null;
+    $this->mon1 = $data['mon1'] ?? null;
+    $this->mon2 = $data['mon2'] ?? null;
+    $this->mon3 = $data['mon3'] ?? null;
+    $this->cc1 = $data['cc1'] ?? null;
+    $this->cc2 = $data['cc2'] ?? null;
+    $this->cc3 = $data['cc3'] ?? null;
+    $this->fecha_emod = $data['fecha_emod'] ?? null;
+    $this->tdoc_emod = $data['tdoc_emod'] ?? null;
+    $this->ser_emod = $data['ser_emod'] ?? null;
+    $this->num_emod = $data['num_emod'] ?? null;
+    $this->fec_emi_detr = $data['fec_emi_detr'] ?? null;
+    $this->num_const_der = $data['num_const_der'] ?? null;
+    $this->tiene_detracc = $data['tiene_detracc'] ?? null;
+    $this->mont_detracc = $data['mont_detracc'] ?? null;
+    $this->ref_int1 = $data['ref_int1'] ?? null;
+    $this->ref_int2 = $data['ref_int2'] ?? null;
+    $this->ref_int3 = $data['ref_int3'] ?? null;
+    $this->estado_doc = $data['estado_doc'] ?? null;
+    $this->estado = $data['estado'] ?? null;
+    $this->fecha_vaucher = $data['fecha_vaucher'] ?? null;
+    $this->cnta1 = $data['cnta1'] ?? ['cuenta' => '', 'DebeHaber' => null];
+    $this->cnta2 = $data['cnta2'] ?? ['cuenta' => '', 'DebeHaber' => null];
+    $this->cnta3 = $data['cnta3'] ?? ['cuenta' => '', 'DebeHaber' => null];
+    $this->cnta_precio = $data['cnta_precio'] ?? ['cuenta' => '', 'DebeHaber' => null, 'precioTotal' => null];
+    $this->cta_otro_t = $data['cta_otro_t'] ?? ['cuenta' => '', 'DebeHaber' => null];
+    $this->cta_detracc = $data['cta_detracc'] ?? ['cuenta' => '', 'DebeHaber' => null];
+}
+
+    
+    
+#[On('resetFields')]
+public function resetFields()
+{
+    $this->editIndex = null;
+    $this->empresaId = null;
+    $this->libro = null;
+    $this->fecha_doc = null;
+    $this->fecha_ven = null;
+    $this->tdoc = null;
+    $this->ser = null;
+    $this->num = null;
+    $this->cod_moneda = null;
+    $this->tip_cam = null;
+    $this->opigv = null;
+    $this->bas_imp = null;
+    $this->igv = null;
+    $this->no_gravadas = null;
+    $this->isc = null;
+    $this->imp_bol_pla = null;
+    $this->otro_tributo = null;
+    $this->precio = null;
+    $this->glosa = null;
+    $this->mon1 = null;
+    $this->mon2 = null;
+    $this->mon3 = null;
+    $this->cc1 = null;
+    $this->cc2 = null;
+    $this->cc3 = null;
+    $this->fecha_emod = null;
+    $this->tdoc_emod = null;
+    $this->ser_emod = null;
+    $this->num_emod = null;
+    $this->fec_emi_detr = null;
+    $this->num_const_der = null;
+    $this->tiene_detracc = null;
+    $this->mont_detracc = null;
+    $this->ref_int1 = null;
+    $this->ref_int2 = null;
+    $this->ref_int3 = null;
+    $this->estado_doc = null;
+    $this->estado = null;
+    $this->fecha_vaucher = null;
+    $this->correntistaData = null;
+    $this->usuario = [];
+    $this->cnta1 = ['cuenta' => '', 'DebeHaber' => null];
+    $this->cnta2 = ['cuenta' => '', 'DebeHaber' => null];
+    $this->cnta3 = ['cuenta' => '', 'DebeHaber' => null];
+    $this->cta_otro_t = ['cuenta' => '', 'DebeHaber' => null];
+    $this->cnta_precio = ['cuenta' => '', 'DebeHaber' => null, 'precioTotal' => null];
+    $this->cta_detracc = ['cuenta' => '', 'DebeHaber' => null];
+    $this->porcentaje = '';
+    $this->montoDolares = [];
+    $this->igv_manual = false;
+}
+
+
+public function openCreateForm()
+{
+    $this->resetFields();
+    $this->dispatch('showModal');
+}
 
 
     public function render()

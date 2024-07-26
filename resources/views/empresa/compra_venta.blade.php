@@ -23,9 +23,11 @@
                             <input type="email" class="form-control w-100" id="exampleFormControlInput1" placeholder="ingrese una palabra para filtrar">
                         </div>
                         <div>
-                            <button type="button" class="btn btn-primary text-light" data-bs-toggle="modal" data-bs-target="#formModal">
+                            <button type="button" class="btn btn-primary text-light" wire:click="openCreateForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 Abrir Formulario
                             </button>
+                            
+                            
                         </div>
                     </div>
                     <livewire:alert-message />
@@ -36,7 +38,7 @@
     </div>
     
     <!-- Modal -->
-    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -65,10 +67,12 @@
         });
 
         // Detectar el evento de cierre del modal
-        const formModal = document.getElementById('formModal');
+        const formModal = document.getElementById('staticBackdrop');
         formModal.addEventListener('hidden.bs.modal', function () {
-            Livewire.emit('resetFields');
+            Livewire.dispatch('resetFields');
         });
     });
 </script>
+
+
 @endsection

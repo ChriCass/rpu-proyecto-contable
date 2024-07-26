@@ -34,6 +34,13 @@ class CompraVentaTable extends Component
         Log::info('Data received in CompraVentaTable: ', $this->data);
     }
 
+    #[On('dataUpdated')]
+    public function handleDataUpdated($data)
+    {
+        $this->data[$data['index']] = $data['data']; // Actualizar los datos en lugar de reemplazarlos
+        Log::info('Data updated in CompraVentaTable: ', $this->data);
+    }
+
     #[On('montoDolaresGuardado')]
     public function handleMontoDolaresGuardado($data)
     {
@@ -58,6 +65,12 @@ class CompraVentaTable extends Component
             $this->data = array_values($this->data); // Reindexar el array
         }
     }
+
+    public function editRow($index)
+    {
+        $this->dispatch('loadData', ['index' => $index, 'data' => $this->data[$index]]);
+    }
+    
     public function insertData()
     {
         Log::info('Starting data insertion');

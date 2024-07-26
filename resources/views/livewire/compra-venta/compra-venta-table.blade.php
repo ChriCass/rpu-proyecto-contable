@@ -171,9 +171,10 @@
                                                 {{ $estados->where('N', $dataItem['estado'])->first()->DESCRIPCION ?? '-' }}
                                             </td>
                                             <td class="center">
-                                                <a href="#" class="btn btn-tbl-edit">
+                                                <a href="#" class="btn btn-tbl-edit" wire:click="editRow({{ $index }})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i class="material-icons">create</i>
                                                 </a>
+                                                
                                                 <a href="#" class="btn btn-tbl-delete" wire:click="NoMoreRow({{ $index }})">
                                                     <i class="material-icons">delete_forever</i>
                                                 </a>
